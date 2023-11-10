@@ -5,8 +5,7 @@ import asyncio
 
 from creds import BOT_TOKEN
 
-from handlers import users_handlers
-
+from core.handlers import users_handlers
 
 bot: Bot = Bot(BOT_TOKEN, parse_mode='html')
 dp: Dispatcher = Dispatcher()
