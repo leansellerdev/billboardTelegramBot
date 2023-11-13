@@ -5,10 +5,11 @@ import asyncio
 
 from creds import BOT_TOKEN
 
-from core.handlers import users_handlers
+from core.handlers import users_handlers, registration_handlers
+from core.states.states import storage
 
 bot: Bot = Bot(BOT_TOKEN, parse_mode='html')
-dp: Dispatcher = Dispatcher()
+dp: Dispatcher = Dispatcher(storage=storage)
 
 
 # Инициализируем логгер
@@ -28,6 +29,7 @@ async def main():
 
     # Регистрируем обработчики
     dp.include_router(users_handlers.router)
+    dp.include_router(registration_handlers.reg_router)
 
     # Пропускаем накопившиеся апдейты и запускаем polling
     await bot.delete_webhook(drop_pending_updates=True)
