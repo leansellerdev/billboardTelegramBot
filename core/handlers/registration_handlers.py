@@ -1,13 +1,14 @@
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
-from aiogram.types import ReplyKeyboardRemove
+from aiogram.filters.command import Command
 
 from core.states.states import FSMRegistration, FSMStart
 from core.buttons.registration_buttons import reg_end_kb_builder
-from core.buttons.action_buttons import registered_kb_builder
+from core.buttons.action_buttons import registered_kb_builder, cancel_kb_builder
 
-from core.database.db import create_user
+from core.database.users.db_users import create_user
+from core.utils.utils import user_registered, get_user_info
 
 reg_router: Router = Router()
 
@@ -16,13 +17,7 @@ reg_router: Router = Router()
 @reg_router.callback_query(F.data == 'reg_end', FSMRegistration.end)
 async def reg_end(callback: CallbackQuery, state: FSMContext):
     data = await state.get_data()
-    user_id = data["tg_id"]
-    name = data["name"]
-    surname = data["surname"]
-    email = data["email"]
-    phone_number = data["phone_number"]
-
-    await create_user(user_id, name, surname, email, phone_number)
+    await create_user(user=data)
 
     await state.set_state(FSMStart.start)
 
@@ -31,9 +26,11 @@ async def reg_end(callback: CallbackQuery, state: FSMContext):
         show_alert=True
     )
 
+    user_info = await get_user_info(callback.from_user.id)
+
     await callback.message.delete()
     await callback.message.answer(
-        text=f"{data}",
+        text=user_info,
         reply_markup=registered_kb_builder.as_markup(
             resize_keyboard=True
         )
@@ -49,19 +46,29 @@ async def change_reg_date(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
     await callback.message.answer(
         text="Напишите свое имя",
-        reply_markup=ReplyKeyboardRemove()
+        reply_markup=cancel_kb_builder.as_markup(
+            resize_keyboard=True
+        )
     )
 
 
 # 1. Enter name
+@reg_router.message(Command(commands=["registration"]))
 @reg_router.message(F.text == "Регистрация")
 async def reg_name(message: Message, state: FSMContext):
 
-    await state.set_state(FSMRegistration.name)
-    await message.answer(
-        text="Напишите свое имя",
-        reply_markup=ReplyKeyboardRemove()
-    )
+    if await user_registered(message.from_user.id):
+        await message.answer(
+            text="Вы уже зарегистрированы!"
+        )
+    else:
+        await state.set_state(FSMRegistration.name)
+        await message.answer(
+            text="Напишите свое имя",
+            reply_markup=cancel_kb_builder.as_markup(
+                resize_keyboard=True
+            )
+        )
 
 
 # 2. Enter surname
@@ -79,7 +86,7 @@ async def reg_surname(message: Message, state: FSMContext):
     )
 
 
-# 3. Enter surname
+# 3. Enter email
 @reg_router.message(F.text, FSMRegistration.surname)
 async def reg_email(message: Message, state: FSMContext):
 
@@ -93,7 +100,7 @@ async def reg_email(message: Message, state: FSMContext):
     )
 
 
-# 4. Enter email
+# 4. Enter phone
 @reg_router.message(F.text, FSMRegistration.email)
 async def reg_phone_number(message: Message, state: FSMContext):
 
@@ -107,7 +114,7 @@ async def reg_phone_number(message: Message, state: FSMContext):
     )
 
 
-# 5. Enter phone
+# 5. Reg last step
 @reg_router.message(F.text, FSMRegistration.phone_number)
 async def reg_end(message: Message, state: FSMContext):
 
