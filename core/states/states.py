@@ -9,6 +9,9 @@ storage: RedisStorage = RedisStorage(redis=redis)
 
 class FSMStart(StatesGroup):
     start = State()
+    self_orders = State()
+    billboards = State()
+    about = State()
 
 
 class FSMRegistration(StatesGroup):
@@ -18,3 +21,9 @@ class FSMRegistration(StatesGroup):
     email = State()
     phone_number = State()
     end = State()
+
+
+class FSMChangeData(StatesGroup):
+
+    change_phone = State()
+    change_email = State()
