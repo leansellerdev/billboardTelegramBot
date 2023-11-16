@@ -19,7 +19,7 @@ async def create_user(user: dict):
             name=user["name"],
             surname=user["surname"],
             email=user["email"],
-            phone_number=user["phone_number"]
+            phone_number=user["phone_number"].replace(" ", "")
         )
 
         session.add(user)
