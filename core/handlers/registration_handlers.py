@@ -8,7 +8,8 @@ from core.buttons.registration_buttons import reg_end_kb_builder
 from core.buttons.action_buttons import registered_kb_builder, cancel_kb_builder
 
 from core.database.users.db_users import create_user
-from core.utils.utils import user_registered, get_user_info
+from core.utils.users_utils import user_registered, get_user_info
+from core.filters.registration_filters import EmailFilter, PhoneFilter
 
 reg_router: Router = Router()
 
@@ -101,7 +102,7 @@ async def reg_email(message: Message, state: FSMContext):
 
 
 # 4. Enter phone
-@reg_router.message(F.text, FSMRegistration.email)
+@reg_router.message(EmailFilter(), FSMRegistration.email)
 async def reg_phone_number(message: Message, state: FSMContext):
 
     await state.update_data(
@@ -114,8 +115,17 @@ async def reg_phone_number(message: Message, state: FSMContext):
     )
 
 
+@reg_router.message(FSMRegistration.email)
+async def process_incorrect_email(message: Message):
+
+    await message.answer(
+        text="Некорректный адрес почты!\n"
+             "Введите адрес Вашей почты в виде example@example.com"
+    )
+
+
 # 5. Reg last step
-@reg_router.message(F.text, FSMRegistration.phone_number)
+@reg_router.message(PhoneFilter(), FSMRegistration.phone_number)
 async def reg_end(message: Message, state: FSMContext):
 
     await state.update_data(
@@ -128,4 +138,13 @@ async def reg_end(message: Message, state: FSMContext):
         reply_markup=reg_end_kb_builder.as_markup(
             resize_keyboard=True
         )
+    )
+
+
+@reg_router.message(FSMRegistration.phone_number)
+async def process_incorrect_phone(message: Message):
+
+    await message.answer(
+        text="Некорректный номер телефона\n"
+             "Введи номер Вашего телефона в виде +1 234 567 8901"
     )
