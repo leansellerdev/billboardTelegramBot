@@ -7,7 +7,7 @@ from core.states.states import FSMStart
 from core.buttons.action_buttons import (not_registered_kb_builder,
                                          registered_kb_builder)
 
-from core.utils.utils import user_registered
+from core.utils.users_utils import user_registered
 
 router: Router = Router()
 # user_registered = False
@@ -21,7 +21,8 @@ async def start(message: Message, state: FSMContext):
 
     if not await user_registered(message.from_user.id):
         await message.answer(
-            text=f'Здравствуйте, {username}!\nВыберите действие:',
+            text=f'Здравствуйте, {username}!\n\n'
+                 f'Для доступа к полному функционалу Вам необходимо зарегистрироваться - /registration',
             reply_markup=not_registered_kb_builder.as_markup(
                 resize_keyboard=True
             )
