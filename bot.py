@@ -8,6 +8,8 @@ from creds import BOT_TOKEN
 from core.handlers import start_handlers, registration_handlers, command_handlers
 from core.states.states import storage
 
+from core.middlewares.throttling import ThrottlingMiddleware
+
 bot: Bot = Bot(BOT_TOKEN, parse_mode='html')
 dp: Dispatcher = Dispatcher(storage=storage)
 
@@ -26,6 +28,9 @@ async def main():
 
     # Выводим в консоль информацию о начале запуска бота
     logger.info('Starting Bot')
+
+    # Регистрируем middlewares
+    dp.message.middleware.register(ThrottlingMiddleware(storage=storage))
 
     # Регистрируем обработчики
     dp.include_router(start_handlers.router)
