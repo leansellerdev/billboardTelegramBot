@@ -8,7 +8,8 @@ from core.buttons.action_buttons import cancel_kb_builder, registered_kb_builder
 
 from core.database.users.db_users import change_user_phone, change_user_email
 
-from core.utils.utils import user_registered
+from core.utils.users_utils import user_registered
+from core.filters.registration_filters import EmailFilter, PhoneFilter
 
 
 command_router: Router = Router()
@@ -34,7 +35,7 @@ async def change_phone_number(message: Message, state: FSMContext):
         )
 
 
-@command_router.message(F.text, FSMChangeData.change_phone)
+@command_router.message(PhoneFilter(), FSMChangeData.change_phone)
 async def complete_change_phone_number(message: Message, state: FSMContext):
 
     await change_user_phone(message.from_user.id, message.text)
@@ -46,6 +47,15 @@ async def complete_change_phone_number(message: Message, state: FSMContext):
     )
 
     await state.set_state(FSMStart.start)
+
+
+@command_router.message(FSMChangeData.change_phone)
+async def process_incorrect_phone(message: Message):
+
+    await message.answer(
+        text="Некорректный номер телефона\n"
+             "Введи номер Вашего телефона в виде +1 234 567 8901"
+    )
 
 
 @command_router.message(Command(commands=['change_email_address']), FSMStart.start)
@@ -68,7 +78,7 @@ async def change_email_address(message: Message, state: FSMContext):
         )
 
 
-@command_router.message(F.text, FSMChangeData.change_email)
+@command_router.message(EmailFilter(), FSMChangeData.change_email)
 async def complete_change_email_address(message: Message, state: FSMContext):
 
     await change_user_email(message.from_user.id, message.text)
@@ -80,3 +90,12 @@ async def complete_change_email_address(message: Message, state: FSMContext):
     )
 
     await state.set_state(FSMStart.start)
+
+
+@command_router.message(FSMChangeData.change_email)
+async def process_incorrect_email(message: Message):
+
+    await message.answer(
+        text="Некорректный адрес почты!\n"
+             "Введите адрес Вашей почты в виде example@example.com"
+    )
