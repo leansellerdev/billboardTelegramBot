@@ -7,7 +7,7 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 # from sqlalchemy.orm import relationship
 
-from core.database.users.user_models import Base, User
+from core.database.users.user_models import Base
 
 
 class Billboard(Base):
