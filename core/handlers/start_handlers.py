@@ -49,7 +49,7 @@ async def self_orders(message: Message, state: FSMContext):
 @router.message(F.text == "Биллборды", FSMStart.start)
 async def billboards(message: Message, state: FSMContext):
 
-    # await state.set_state(FSMStart.billboards)
+    # await state.set_state(FSMStart.models)
 
     await message.answer(
         text="Coming Soon..."
