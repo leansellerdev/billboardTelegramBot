@@ -5,7 +5,7 @@ from aiogram.filters.command import Command
 
 from core.states.states import FSMRegistration, FSMStart
 from core.buttons.registration_buttons import reg_end_kb_builder
-from core.buttons.action_buttons import registered_kb_builder, cancel_kb_builder
+from core.buttons.action_buttons import registered_kb_builder, cancel_kb_builder, go_back_kb_builder
 
 from core.database.users.db_users import create_user
 from core.utils.users_utils import user_registered, get_user_info
@@ -47,7 +47,7 @@ async def change_reg_date(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
     await callback.message.answer(
         text="Напишите свое имя",
-        reply_markup=cancel_kb_builder.as_markup(
+        reply_markup=go_back_kb_builder.as_markup(
             resize_keyboard=True
         )
     )
@@ -65,10 +65,8 @@ async def reg_name(message: Message, state: FSMContext):
     else:
         await state.set_state(FSMRegistration.name)
         await message.answer(
-            text="Напишите свое имя",
-            reply_markup=cancel_kb_builder.as_markup(
-                resize_keyboard=True
-            )
+            text="Напишите свое имя\n\n"
+                 "Чтобы отменить регистрацию напишите - /cancel",
         )
 
 
@@ -83,7 +81,20 @@ async def reg_surname(message: Message, state: FSMContext):
 
     await state.set_state(FSMRegistration.surname)
     await message.answer(
-        text="Напишите свою фамилию"
+        text="Напишите свою фамилию",
+        reply_markup=(go_back_kb_builder.as_markup(
+            resize_keyboard=True
+        ))
+    )
+
+
+@reg_router.message(F.text == "Назад", FSMRegistration.surname)
+async def back_to_name(message: Message, state: FSMContext):
+
+    await state.set_state(FSMRegistration.name)
+
+    await message.answer(
+        text="Напишите свое имя"
     )
 
 
@@ -101,6 +112,16 @@ async def reg_email(message: Message, state: FSMContext):
     )
 
 
+@reg_router.message(F.text == "Назад", FSMRegistration.email)
+async def back_to_surname(message: Message, state: FSMContext):
+
+    await state.set_state(FSMRegistration.surname)
+
+    await message.answer(
+        text="Напишите свою фамилию"
+    )
+
+
 # 4. Enter phone
 @reg_router.message(EmailFilter(), FSMRegistration.email)
 async def reg_phone_number(message: Message, state: FSMContext):
@@ -112,6 +133,16 @@ async def reg_phone_number(message: Message, state: FSMContext):
     await state.set_state(FSMRegistration.phone_number)
     await message.answer(
         text="Напишите свой номер телефона"
+    )
+
+
+@reg_router.message(F.text == "Назад", FSMRegistration.phone_number)
+async def back_to_email(message: Message, state: FSMContext):
+
+    await state.set_state(FSMRegistration.email)
+
+    await message.answer(
+        text="Напишите свою почту"
     )
 
 
@@ -138,6 +169,16 @@ async def reg_end(message: Message, state: FSMContext):
         reply_markup=reg_end_kb_builder.as_markup(
             resize_keyboard=True
         )
+    )
+
+
+@reg_router.message(F.text == "Назад", FSMRegistration.end)
+async def back_to_name(message: Message, state: FSMContext):
+
+    await state.set_state(FSMRegistration.phone_number)
+
+    await message.answer(
+        text="Напишите свой номер телефона"
     )
 
 

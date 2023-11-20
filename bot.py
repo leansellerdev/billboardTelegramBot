@@ -5,7 +5,7 @@ import asyncio
 
 from creds import BOT_TOKEN
 
-from core.handlers import start_handlers, registration_handlers, command_handlers
+from core.handlers import action_handlers, registration_handlers, command_handlers
 from core.states.states import storage
 
 from core.middlewares.throttling import ThrottlingMiddleware
@@ -33,7 +33,7 @@ async def main():
     dp.message.middleware.register(ThrottlingMiddleware(storage=storage))
 
     # Регистрируем обработчики
-    dp.include_router(start_handlers.router)
+    dp.include_router(action_handlers.router)
     dp.include_router(registration_handlers.reg_router)
     dp.include_router(command_handlers.command_router)
 

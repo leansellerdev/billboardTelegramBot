@@ -1,6 +1,6 @@
 from aiogram import Router, F
 from aiogram.types import Message
-from aiogram.filters.command import CommandStart
+from aiogram.filters.command import CommandStart, Command
 from aiogram.fsm.context import FSMContext
 
 from core.states.states import FSMStart
@@ -14,6 +14,7 @@ router: Router = Router()
 
 
 @router.message(CommandStart())
+@router.message(Command(commands=["cancel"]))
 @router.message(F.text == "Отмена")
 async def start(message: Message, state: FSMContext):
     username = message.from_user.first_name
