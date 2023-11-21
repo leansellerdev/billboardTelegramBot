@@ -1,4 +1,4 @@
-from aiogram import Router, F
+from aiogram import Router
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 from aiogram.filters.command import Command
@@ -6,7 +6,7 @@ from aiogram.filters.command import Command
 from core.states.states import FSMStart, FSMChangeData
 from core.buttons.action_buttons import cancel_kb_builder, registered_kb_builder
 
-from core.database.users.db_users import change_user_phone, change_user_email
+from core.database.db_users import change_user_phone, change_user_email
 
 from core.utils.users_utils import user_registered
 from core.filters.registration_filters import EmailFilter, PhoneFilter

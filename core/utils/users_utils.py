@@ -1,4 +1,4 @@
-from core.database.users.db_users import get_user
+from core.database.db_users import get_user
 
 
 async def user_registered(user_id):

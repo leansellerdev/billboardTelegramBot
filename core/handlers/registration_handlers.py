@@ -5,9 +5,9 @@ from aiogram.filters.command import Command
 
 from core.states.states import FSMRegistration, FSMStart
 from core.buttons.registration_buttons import reg_end_kb_builder
-from core.buttons.action_buttons import registered_kb_builder, cancel_kb_builder, go_back_kb_builder
+from core.buttons.action_buttons import registered_kb_builder, go_back_kb_builder
 
-from core.database.users.db_users import create_user
+from core.database.db_users import create_user
 from core.utils.users_utils import user_registered, get_user_info
 from core.filters.registration_filters import EmailFilter, PhoneFilter
 
