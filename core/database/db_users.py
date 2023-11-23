@@ -3,7 +3,7 @@ import os
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
-from core.database.models.db_models import User
+#from core.database.models.db_models import User
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 

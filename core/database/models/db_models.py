@@ -6,6 +6,7 @@ from sqlalchemy.orm import DeclarativeBase, relationship
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 # from sqlalchemy.orm import relationship
+from core.database.db_users import engine
 
 
 class Base(DeclarativeBase):
@@ -31,17 +32,11 @@ class Billboard(Base):
 
 class Order(Base):
     __tablename__ = "orders"
-
     id: Mapped[int] = mapped_column(primary_key=True, unique=True)
-
     client_id: Mapped[int] = mapped_column(ForeignKey("user_account.id"))
-    client: Mapped["User"] = relationship('User', back_populates="clientOrders",
-                                          foreign_keys=[client_id])
-
-    # manager_id: Mapped[int] = mapped_column(ForeignKey("user_account.id"))
-    # manager: Mapped["User"] = relationship('User', back_populates="managerOrders",
-    #                                        foreign_keys=[manager_id])
-
+    client: Mapped["User"] = relationship('User', back_populates="orders", foreign_keys=[client_id])
+    manager_id: Mapped[int] = mapped_column(ForeignKey("staff.id"))
+    manager: Mapped["Staff"] = relationship('Staff', back_populates="orders", foreign_keys=[manager_id])
     booking: Mapped[List["Booking"]] = relationship()
 
     def __repr__(self):
@@ -64,6 +59,23 @@ class Booking(Base):
 
 class User(Base):
     __tablename__ = "user_account"
+    id: Mapped[int] = mapped_column(primary_key=True, unique=True)
+    telegram_id: Mapped[int] = mapped_column(unique=True)
+    name: Mapped[str] = mapped_column(String(30))
+    surname: Mapped[str] = mapped_column(String(50))
+    email: Mapped[str] = mapped_column(String(255))
+    phone_number: Mapped[int] = mapped_column()
+    #isManager: Mapped[bool] = mapped_column(Boolean, unique=False, default=False)
+    orders: Mapped[List["Order"]] = relationship()
+    # managerOrders: Mapped[List["Order"]] = relationship()
+
+    def __repr__(self):
+        return f"User(id={self.id!r}), name={self.name!r}, surname={self.surname!r}, email={self.email!r}"
+
+
+class Staff(Base):
+
+    __tablename__ = "staff"
 
     id: Mapped[int] = mapped_column(primary_key=True, unique=True)
     telegram_id: Mapped[int] = mapped_column(unique=True)
@@ -72,12 +84,12 @@ class User(Base):
     email: Mapped[str] = mapped_column(String(255))
     phone_number: Mapped[int] = mapped_column()
     isManager: Mapped[bool] = mapped_column(Boolean, unique=False, default=False)
+    isAdmin: Mapped[bool] = mapped_column(Boolean, unique=False, default=False)
 
-    clientOrders: Mapped[List["Order"]] = relationship()
-    managerOrders: Mapped[List["Order"]] = relationship()
+    orders: Mapped[List["Order"]] = relationship()
 
     def __repr__(self):
-        return f"User(id={self.id!r}), name={self.name!r}, surname={self.surname!r}, email={self.email!r}"
+        return "manager" + "id: " + self.id + " telegram_id: " + self.telegram_id
 
 
-# Base.metadata.create_all(bind=engine)
+Base.metadata.create_all(bind=engine)
