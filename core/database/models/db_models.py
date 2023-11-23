@@ -6,7 +6,7 @@ from sqlalchemy.orm import DeclarativeBase, relationship
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 # from sqlalchemy.orm import relationship
-from core.database.db_users import engine
+# from core.database.db_users import engine
 
 
 class Base(DeclarativeBase):
@@ -92,4 +92,4 @@ class Staff(Base):
         return "manager" + "id: " + self.id + " telegram_id: " + self.telegram_id
 
 
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)

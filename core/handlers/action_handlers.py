@@ -5,9 +5,10 @@ from aiogram.fsm.context import FSMContext
 
 from core.states.states import FSMStart
 from core.buttons.action_buttons import (not_registered_kb_builder,
-                                         registered_kb_builder)
+                                         registered_kb_builder, admin_panel_kb_builder)
 
 from core.utils.users_utils import user_registered
+from core.utils.staff_utils import is_admin
 
 router: Router = Router()
 # user_registered = False
@@ -20,7 +21,14 @@ async def start(message: Message, state: FSMContext):
     username = message.from_user.first_name
     await state.set_state(FSMStart.start)
 
-    if not await user_registered(message.from_user.id):
+    if await is_admin(message.from_user.id):
+        await message.answer(
+            text=f'Здравствуйте, {username}!\nВыберите действие:',
+            reply_markup=admin_panel_kb_builder.as_markup(
+                resize_keyboard=True
+            )
+        )
+    elif not await user_registered(message.from_user.id):
         await message.answer(
             text=f'Здравствуйте, {username}!\n\n'
                  f'Для доступа к полному функционалу Вам необходимо зарегистрироваться - /registration',
@@ -61,6 +69,36 @@ async def billboards(message: Message, state: FSMContext):
 async def about_us(message: Message, state: FSMContext):
 
     # await state.set_state(FSMStart.about)
+
+    await message.answer(
+        text="Coming Soon..."
+    )
+
+
+@router.message(F.text == "Пользователи", FSMStart.start)
+async def users(message: Message, state: FSMContext):
+
+    # await state.set_state(FSMStart.self_orders)
+
+    await message.answer(
+        text="Coming Soon..."
+    )
+
+
+@router.message(F.text == "Управление персоналом", FSMStart.start)
+async def personnel_management(message: Message, state: FSMContext):
+
+    # await state.set_state(FSMStart.self_orders)
+
+    await message.answer(
+        text="Coming Soon..."
+    )
+
+
+@router.message(F.text == "Заказы", FSMStart.start)
+async def admin_orders(message: Message, state: FSMContext):
+
+    # await state.set_state(FSMStart.self_orders)
 
     await message.answer(
         text="Coming Soon..."
