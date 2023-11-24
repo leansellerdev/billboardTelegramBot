@@ -18,7 +18,7 @@ start_buttons_not_registered = [
 ]
 
 start_buttons_admin_panel = [
-    "Пользователи", "Управление персоналом", "Заказы"
+    "Пользователи", "Управление персоналом", "Менеджеры"
 ]
 
 cancel_button = KeyboardButton(text="Отмена")

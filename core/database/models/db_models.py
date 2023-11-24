@@ -65,7 +65,7 @@ class User(Base):
     surname: Mapped[str] = mapped_column(String(50))
     email: Mapped[str] = mapped_column(String(255))
     phone_number: Mapped[int] = mapped_column()
-    #isManager: Mapped[bool] = mapped_column(Boolean, unique=False, default=False)
+    isManager: Mapped[bool] = mapped_column(Boolean, unique=False, default=False)
     orders: Mapped[List["Order"]] = relationship()
     # managerOrders: Mapped[List["Order"]] = relationship()
 
@@ -89,7 +89,11 @@ class Staff(Base):
     orders: Mapped[List["Order"]] = relationship()
 
     def __repr__(self):
-        return "manager" + "id: " + self.id + " telegram_id: " + self.telegram_id
+        return (f"User(id={self.id!r}), name={self.name!r}, surname={self.surname!r}, email={self.email!r}, "
+                f"isManager={self.isManager!r}")
+
+    def return_is_manager(self):
+        return self.isManager
 
 
-#Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)

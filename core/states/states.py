@@ -27,3 +27,12 @@ class FSMChangeData(StatesGroup):
 
     change_phone = State()
     change_email = State()
+
+
+class FSMAdminPanel(StatesGroup):
+
+    get_users = State()
+    personal_management = State()
+    set_manager = State()
+    get_managers = State()
+

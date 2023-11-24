@@ -50,3 +50,9 @@ async def change_user_email(user_id: int, new_email_address: str):
         user.email = new_email_address
 
         session.commit()
+
+
+async def get_all_users():
+    users: list[User] = session.query(User).all()
+    return users
+
