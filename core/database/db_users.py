@@ -57,7 +57,3 @@ def get_all_users():
     user = session.query(User).all()
 
     return user
-
-
-a = get_all_users()
-print(a)
