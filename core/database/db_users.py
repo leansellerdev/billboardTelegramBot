@@ -50,3 +50,14 @@ async def change_user_email(user_id: int, new_email_address: str):
         user.email = new_email_address
 
         session.commit()
+
+
+def get_all_users():
+
+    user = session.query(User).all()
+
+    return user
+
+
+a = get_all_users()
+print(a)
