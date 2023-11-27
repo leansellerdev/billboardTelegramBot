@@ -1,1 +1,1 @@
-from . import action_buttons, registration_buttons
+from . import action_buttons, registration_buttons, admin_buttons

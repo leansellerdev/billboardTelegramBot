@@ -45,6 +45,7 @@ class Order(Base):
 
 class Booking(Base):
     __tablename__ = "orders_billboards"
+
     id: Mapped[int] = mapped_column(primary_key=True, unique=True)
 
     order_id: Mapped[int] = (mapped_column(ForeignKey('orders.id')))
@@ -59,15 +60,18 @@ class Booking(Base):
 
 class User(Base):
     __tablename__ = "user_account"
+
     id: Mapped[int] = mapped_column(primary_key=True, unique=True)
     telegram_id: Mapped[int] = mapped_column(unique=True)
     name: Mapped[str] = mapped_column(String(30))
     surname: Mapped[str] = mapped_column(String(50))
     email: Mapped[str] = mapped_column(String(255))
     phone_number: Mapped[int] = mapped_column()
-    isManager: Mapped[bool] = mapped_column(Boolean, unique=False, default=False)
+
+    isManager: Mapped[bool] = mapped_column(Boolean, unique=False, default=0)
+    # isAdmin: Mapped[bool] = mapped_column(Boolean, unique=False, default=0)
+
     orders: Mapped[List["Order"]] = relationship()
-    # managerOrders: Mapped[List["Order"]] = relationship()
 
     def __repr__(self):
         return f"User(id={self.id!r}), name={self.name!r}, surname={self.surname!r}, email={self.email!r}"
@@ -83,8 +87,9 @@ class Staff(Base):
     surname: Mapped[str] = mapped_column(String(50))
     email: Mapped[str] = mapped_column(String(255))
     phone_number: Mapped[int] = mapped_column()
+
     isManager: Mapped[bool] = mapped_column(Boolean, unique=False, default=False)
-    isAdmin: Mapped[bool] = mapped_column(Boolean, unique=False, default=False)
+    # isAdmin: Mapped[bool] = mapped_column(Boolean, unique=False, default=False)
 
     orders: Mapped[List["Order"]] = relationship()
 
@@ -94,6 +99,3 @@ class Staff(Base):
 
     def return_is_manager(self):
         return self.isManager
-
-
-# Base.metadata.create_all(bind=engine)

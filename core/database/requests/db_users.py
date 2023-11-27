@@ -1,13 +1,9 @@
-import os
-
-from sqlalchemy import create_engine, select
+from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from core.database.models.db_models import User
+from .db_staff import engine
 
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-engine = create_engine(f"sqlite:///{os.path.join(basedir, 'database.db')}", echo=True)
 session: Session(engine) = Session(engine)
 
 

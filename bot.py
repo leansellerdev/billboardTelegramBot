@@ -1,3 +1,5 @@
+import os
+
 from aiogram import Bot, Dispatcher
 
 import logging
@@ -5,13 +7,17 @@ import asyncio
 
 from creds import BOT_TOKEN
 
-from core.handlers import action_handlers, registration_handlers, command_handlers
+from core.handlers import *
 from core.states.states import storage
 
 from core.middlewares.throttling import ThrottlingMiddleware
+from core.database.models.db_models import Base
+from core.database.requests.db_staff import engine
 
 bot: Bot = Bot(BOT_TOKEN, parse_mode='html')
 dp: Dispatcher = Dispatcher(storage=storage)
+
+basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 # Инициализируем логгер
@@ -34,8 +40,13 @@ async def main():
 
     # Регистрируем обработчики
     dp.include_router(action_handlers.router)
+    dp.include_router(admin_handlers.admin_router)
     dp.include_router(registration_handlers.reg_router)
     dp.include_router(command_handlers.command_router)
+
+    # Создаем модели базы данных, если их нет
+    if not os.path.exists(os.path.join(basedir, 'database.db')):
+        Base.metadata.create_all(bind=engine)
 
     # Пропускаем накопившиеся апдейты и запускаем polling
     await bot.delete_webhook(drop_pending_updates=True)

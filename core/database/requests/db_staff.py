@@ -1,13 +1,18 @@
 import os
-
-from sqlalchemy import create_engine, select
-from sqlalchemy.orm import Session
+from sqlalchemy import select, create_engine
 
 from core.database.models.db_models import Staff, User
-from core.database.db_users import engine, session
+from sqlalchemy.orm import Session
+# from core.database.requests.db_users import engine
+
+basedir = r"C:\Users\ddudk\Desktop\pycharmprojects\billboardTelegramBot"
+
+engine = create_engine(f"sqlite:///{os.path.join(basedir, 'database.db')}", echo=True)
+session: Session = Session(engine)
 
 
 async def create_staff(staff: dict):
+
     with session:
         staff: Staff = Staff(
             telegram_id=staff["telegram_id"],
@@ -15,53 +20,70 @@ async def create_staff(staff: dict):
             surname=staff["surname"],
             email=staff["email"],
             phone_number=staff["phone_number"],
-            isManager=staff["isManager"],
-            isAdmin=staff["isAdmin"]
+            isManager=staff["isManager"]
         )
         session.add(staff)
         session.commit()
 
 
-async def get_staff(staff_id: int):
-    staff = session.query(Staff).filter(Staff.telegram_id == staff_id).scalar()
+async def get_staff(staff_id: str):
+
+    staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id).scalar()
     return staff
 
 
+async def delete_staff(staff_id: str):
+
+    with session:
+
+        staff: Staff = session.scalar(select(Staff).filter_by(telegram_id=staff_id))
+        session.delete(staff)
+
+        session.commit()
+
+
 async def get_all_managers():
-    staffs = session.query(Staff).filter(Staff.isManager == "True").all()
+
+    staffs = session.query(Staff).filter(Staff.isManager == 1).all()
     return staffs
 
 
 async def change_staff_phone(staff_id: int, new_phone_number):
+
     with session:
-        staff = session.scalar(select(Staff).filter_by(telegram_id=staff_id))
+
+        staff: Staff = session.scalar(select(Staff).filter_by(telegram_id=staff_id))
         staff.phone_number = new_phone_number
         session.commit()
 
 
 async def change_staff_email(staff_id: int, new_email_address: str):
+
     with session:
-        staff = session.scalar(select(Staff).filter_by(telegram_id=staff_id))
+
+        staff: Staff = session.scalar(select(Staff).filter_by(telegram_id=staff_id))
         staff.email = new_email_address
         session.commit()
 
 
-async def set_manager_status(staff_id: str, status: bool):
+async def set_manager_status(user_id: str, status: bool):
+
     with session:
-        user = session.scalar(select(User).filter_by(telegram_id=staff_id))
+
+        user: User = session.scalar(select(User).filter_by(telegram_id=user_id))
         user.isManager = status
 
-        staff = {
+        staff_info = {
             "telegram_id": user.telegram_id,
-            "name":user.name,
-            'surname':user.surname,
+            "name": user.name,
+            'surname': user.surname,
             'email': user.email,
             'phone_number': user.phone_number,
-            'isManager': user.isManager,
-            'isAdmin': True
+            'isManager': user.isManager
         }
 
-        await create_staff(staff)
         session.commit()
 
-#set_manager_status("889767148", True)
+    return staff_info
+
+# set_manager_status("889767148", True)

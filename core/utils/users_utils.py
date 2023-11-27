@@ -1,4 +1,4 @@
-from core.database.db_users import *
+from core.database.requests.db_users import *
 
 
 async def user_registered(user_id):
