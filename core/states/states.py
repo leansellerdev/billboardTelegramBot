@@ -36,3 +36,20 @@ class FSMAdminPanel(StatesGroup):
     set_manager = State()
     get_managers = State()
 
+
+class FSMManagerPanel(StatesGroup):
+
+    get_my_users = State()
+    statistics = State()
+    get_orders = State()
+
+
+class FSMCreateBillboard(StatesGroup):
+
+    width = State()
+    height = State()
+    sides = State()
+    surface = State()
+    address = State()
+    pricePerDay = State()
+    end = State()

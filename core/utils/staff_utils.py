@@ -4,7 +4,7 @@ import pandas as pd
 
 from core.database.requests.db_staff import (get_staff, create_staff,
                                              set_manager_status, delete_staff)
-from core.database.models.db_models import User, Staff
+from core.database.models.db_models import User, Staff, Order
 from creds import admins
 
 excel_path = "core/utils/temp/users.xlsx"
@@ -44,6 +44,25 @@ async def id_valid(user_id: str):
     return True
 
 
+async def get_user_info(user_id):
+
+    user_data = await get_user(user_id)
+
+    user_info = {
+        "Имя": user_data.name,
+        "Фамилия": user_data.surname,
+        "Почта": user_data.email,
+        "Номер телефона": user_data.phone_number
+    }
+
+    text_to_send = ""
+
+    for key, value in user_info.items():
+        text_to_send += f"{key}: {value}\n"
+
+    return text_to_send
+
+
 async def create_excel_to_send(users: list[User, Staff]):
 
     data = []
@@ -67,9 +86,30 @@ async def create_excel_to_send(users: list[User, Staff]):
     return data
 
 
+async def create_excel_to_send_manager_orders(orders: list[Order]):
+
+    data = []
+
+    for i, order in enumerate(orders):
+
+        dt = {
+            "client": order.client.telegram_id,
+            "manager": order.manager.telegram_id,
+            "orders": order.booking,
+        }
+
+        data.append(dt)
+
+    df = pd.DataFrame(data)
+    df.to_excel(excel_path, index=False)
+
+    return data
+
+
 async def delete_excel_file():
 
     if not os.path.exists(excel_path):
         return
 
     os.remove(excel_path)
+

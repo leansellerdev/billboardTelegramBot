@@ -10,6 +10,7 @@ from sqlalchemy.orm import mapped_column
 
 # from core.database.db_users import engine
 
+
 class Base(DeclarativeBase):
     pass
 
@@ -73,6 +74,7 @@ class User(Base):
     # isAdmin: Mapped[bool] = mapped_column(Boolean, unique=False, default=0)
 
     orders: Mapped[List["Order"]] = relationship()
+    manager_id: Mapped[int] = mapped_column(ForeignKey('staff.id'), nullable=True)
 
     def __repr__(self):
         return f"User(id={self.id!r}), name={self.name!r}, surname={self.surname!r}, email={self.email!r}"
@@ -93,6 +95,7 @@ class Staff(Base):
     # isAdmin: Mapped[bool] = mapped_column(Boolean, unique=False, default=False)
 
     orders: Mapped[List["Order"]] = relationship()
+    users: Mapped[List["User"]] = relationship()
 
     def __repr__(self):
         return (f"User(id={self.id!r}), name={self.name!r}, surname={self.surname!r}, email={self.email!r}, "
@@ -100,3 +103,21 @@ class Staff(Base):
 
     def return_is_manager(self):
         return self.isManager
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

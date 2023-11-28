@@ -5,7 +5,7 @@ from core.database.models.db_models import Staff, User
 from sqlalchemy.orm import Session
 # from core.database.requests.db_users import engine
 
-basedir = r"C:\Users\ddudk\Desktop\pycharmprojects\billboardTelegramBot"
+basedir = r"C:\IITU\python\billboardTelegramBot"
 
 engine = create_engine(f"sqlite:///{os.path.join(basedir, 'database.db')}", echo=True)
 session: Session = Session(engine)
@@ -30,6 +30,22 @@ async def get_staff(staff_id: str):
 
     staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id).scalar()
     return staff
+
+
+async def get_manager(staff_id: str):
+    staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id, Staff.isManager == 1).scalar()
+    return staff
+
+
+async def get_manager_orders(staff_id: str):
+    staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id, Staff.isManager == 1).scalar()
+    return staff.orders
+
+
+async def get_manager_users(staff_id: str):
+
+    staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id).scalar()
+    return staff.users
 
 
 async def delete_staff(staff_id: str):

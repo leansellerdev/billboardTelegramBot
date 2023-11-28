@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 
 from core.states.states import FSMStart
 from core.buttons.action_buttons import (not_registered_kb_builder,
-                                         registered_kb_builder, admin_panel_kb_builder)
+                                         registered_kb_builder, admin_panel_kb_builder, manager_panel_kb_builder)
 
 from core.utils.users_utils import user_registered
 from core.utils.staff_utils import *
@@ -21,9 +21,16 @@ async def start(message: Message, state: FSMContext):
     username = message.from_user.first_name
     await state.set_state(FSMStart.start)
 
-    if await is_admin(message.from_user.id):
+    if await is_manager(str(message.from_user.id)):
         await message.answer(
-            text=f'Здравствуйте, {username}!\nВыберите действие:',
+            text=f'Здравствуйте Мэнеджер, {username}!\nВыберите действие:',
+            reply_markup=manager_panel_kb_builder.as_markup(
+                resize_keyboard=True
+            )
+        )
+    elif await is_admin(message.from_user.id):
+        await message.answer(
+            text=f'Здравствуйте Администратор, {username}!\nВыберите действие:',
             reply_markup=admin_panel_kb_builder.as_markup(
                 resize_keyboard=True
             )
