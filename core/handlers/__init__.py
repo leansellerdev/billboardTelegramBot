@@ -1,1 +1,1 @@
-from . import action_handlers, registration_handlers, admin_handlers, command_handlers
+from . import action_handlers, registration_handlers, admin_handlers, command_handlers, users_handlers

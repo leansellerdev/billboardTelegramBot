@@ -21,9 +21,9 @@ class Billboard(Base):
     id: Mapped[int] = mapped_column(primary_key=True, unique=True)
     width: Mapped[str] = mapped_column()
     height: Mapped[str] = mapped_column(String(50))
-    sides: Mapped[int] = mapped_column()
     surface: Mapped[str] = mapped_column(String(50))
-    address: Mapped[str] = mapped_column(String(50))
+    district: Mapped[str] = mapped_column(String(50))
+    address: Mapped[str] = mapped_column(String(255))
     pricePerDay: Mapped[float] = mapped_column()
 
     booking: Mapped[List["Booking"]] = relationship(back_populates="billboard")

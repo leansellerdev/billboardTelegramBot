@@ -2,8 +2,8 @@ import os
 
 import pandas as pd
 
-from core.database.requests.db_staff import (get_staff, create_staff,
-                                             set_manager_status, delete_staff)
+from core.database.requests.staff import (get_staff, create_staff,
+                                          set_manager_status, delete_staff)
 from core.database.models.db_models import User, Staff, Order
 from creds import admins
 

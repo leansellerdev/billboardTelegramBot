@@ -23,7 +23,7 @@ async def start(message: Message, state: FSMContext):
 
     if await is_manager(str(message.from_user.id)):
         await message.answer(
-            text=f'Здравствуйте Мэнеджер, {username}!\nВыберите действие:',
+            text=f'Здравствуйте Менеджер, {username}!\nВыберите действие:',
             reply_markup=manager_panel_kb_builder.as_markup(
                 resize_keyboard=True
             )
@@ -50,33 +50,3 @@ async def start(message: Message, state: FSMContext):
                 resize_keyboard=True
             )
         )
-
-
-@router.message(F.text == "Мои заказы", FSMStart.start)
-async def self_orders(message: Message, state: FSMContext):
-
-    # await state.set_state(FSMStart.self_orders)
-
-    await message.answer(
-        text="Coming Soon..."
-    )
-
-
-@router.message(F.text == "Биллборды", FSMStart.start)
-async def billboards(message: Message, state: FSMContext):
-
-    # await state.set_state(FSMStart.billboards)
-
-    await message.answer(
-        text="Coming Soon..."
-    )
-
-
-@router.message(F.text == "О нас", FSMStart.start)
-async def about_us(message: Message, state: FSMContext):
-
-    # await state.set_state(FSMStart.about)
-
-    await message.answer(
-        text="Coming Soon..."
-    )

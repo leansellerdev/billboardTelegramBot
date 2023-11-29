@@ -39,9 +39,9 @@ class FSMAdminPanel(StatesGroup):
 
 class FSMManagerPanel(StatesGroup):
 
-    get_my_users = State()
+    my_clients = State()
+    billboards = State()
     statistics = State()
-    get_orders = State()
 
 
 class FSMCreateBillboard(StatesGroup):

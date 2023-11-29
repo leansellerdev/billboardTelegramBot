@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from core.database.models.db_models import Billboard
 
-from .db_staff import engine
+from .staff import engine
 
 session: Session(engine) = Session(engine)
 

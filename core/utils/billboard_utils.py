@@ -1,4 +1,4 @@
-from core.database.requests.db_billboards import get_billboard
+from core.database.requests.billboards import get_billboard
 
 
 async def get_billboard_info(billboard_id: str):

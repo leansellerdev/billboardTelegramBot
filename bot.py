@@ -13,7 +13,7 @@ from core.states.states import storage
 
 from core.middlewares.throttling import ThrottlingMiddleware
 from core.database.models.db_models import Base
-from core.database.requests.db_staff import engine
+from core.database.requests.staff import engine
 
 bot: Bot = Bot(BOT_TOKEN, parse_mode='html')
 dp: Dispatcher = Dispatcher(storage=storage)
@@ -46,6 +46,7 @@ async def main():
     dp.include_router(command_handlers.command_router)
     dp.include_router(manager_handlers.manager_router)
     dp.include_router(create_billboard_handlers.create_billboard_router)
+    dp.include_router(users_handlers.users_router)
 
     # Создаем модели базы данных, если их нет
     if not os.path.exists(os.path.join(basedir, 'database.db')):

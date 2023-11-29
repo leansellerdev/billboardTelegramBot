@@ -3,7 +3,7 @@ import os
 import pandas as pd
 
 from core.database.models.db_models import Staff
-from core.database.requests.db_users import *
+from core.database.requests.users import *
 
 from creds import admins
 

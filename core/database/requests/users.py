@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from core.database.models.db_models import User
-from .db_staff import engine
+from .staff import engine
 
 session: Session(engine) = Session(engine)
 

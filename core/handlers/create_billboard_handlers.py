@@ -5,7 +5,7 @@ from aiogram.filters.command import Command
 
 from core.buttons.action_buttons import manager_panel_kb_builder
 from core.buttons.create_billboard_buttons import create_billboard_end_kb_builder
-from core.database.requests.db_billboards import create_billboard
+from core.database.requests.billboards import create_billboard
 from core.states.states import FSMCreateBillboard, FSMStart, FSMManagerPanel
 from core.utils.billboard_utils import get_billboard_info
 
@@ -50,8 +50,8 @@ async def change_billboard_date(callback: CallbackQuery, state: FSMContext):
 
 
 # 1. Enter width
-@create_billboard_router.message(Command(commands=["registration"]))
-@create_billboard_router.message(F.text == "Добавить билборд")
+# @create_billboard_router.message(Command(commands=["registration"]))
+@create_billboard_router.message(F.text == "Добавить билборд", FSMManagerPanel.billboards)
 async def enter_width(message: Message, state: FSMContext):
 
     await state.set_state(FSMCreateBillboard.width)

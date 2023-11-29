@@ -6,8 +6,8 @@ from aiogram.fsm.context import FSMContext
 
 from core.states.states import FSMStart, FSMAdminPanel
 
-from core.database.requests.db_users import *
-from core.database.requests.db_staff import *
+from core.database.requests.users import *
+from core.database.requests.staff import *
 
 from core.buttons.admin_buttons import admin_set_manager_kb_builder
 from core.buttons.action_buttons import go_back_kb_builder
@@ -64,7 +64,7 @@ async def managers(message: Message):
     await delete_excel_file()
 
 
-@admin_router.message(F.text == "Назад")
+@admin_router.message(F.text == "Назад", FSMAdminPanel.personal_management)
 async def go_back_to_main(message: Message, state: FSMContext):
 
     await state.set_state(FSMStart.start)
