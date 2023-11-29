@@ -5,10 +5,7 @@ from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase, relationship
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
-# from sqlalchemy.orm import relationship
-# from core.database.db_users import engine
 
-# from core.database.db_users import engine
 
 class Base(DeclarativeBase):
     pass
@@ -20,9 +17,9 @@ class Billboard(Base):
     id: Mapped[int] = mapped_column(primary_key=True, unique=True)
     width: Mapped[str] = mapped_column()
     height: Mapped[str] = mapped_column(String(50))
-    sides: Mapped[int] = mapped_column()
     surface: Mapped[str] = mapped_column(String(50))
-    address: Mapped[str] = mapped_column(String(50))
+    district: Mapped[str] = mapped_column(String(50))
+    address: Mapped[str] = mapped_column(String(255))
     pricePerDay: Mapped[float] = mapped_column()
 
     booking: Mapped[List["Booking"]] = relationship(back_populates="billboard")
@@ -33,11 +30,15 @@ class Billboard(Base):
 
 class Order(Base):
     __tablename__ = "orders"
+
     id: Mapped[int] = mapped_column(primary_key=True, unique=True)
+
     client_id: Mapped[int] = mapped_column(ForeignKey("user_account.id"))
     client: Mapped["User"] = relationship('User', back_populates="orders", foreign_keys=[client_id])
+
     manager_id: Mapped[int] = mapped_column(ForeignKey("staff.id"))
     manager: Mapped["Staff"] = relationship('Staff', back_populates="orders", foreign_keys=[manager_id])
+
     booking: Mapped[List["Booking"]] = relationship()
 
     def __repr__(self):
@@ -75,7 +76,8 @@ class User(Base):
     orders: Mapped[List["Order"]] = relationship()
 
     def __repr__(self):
-        return f"User(id={self.id!r}), name={self.name!r}, surname={self.surname!r}, email={self.email!r}"
+        return f"User(id={self.id!r}), name={self.name!r}, surname={self.surname!r}, email={self.email!r}," \
+               f"phone_number={self.phone_number!r}"
 
 
 class Staff(Base):
