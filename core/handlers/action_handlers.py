@@ -20,7 +20,7 @@ router: Router = Router()
 async def start(message: Message, state: FSMContext):
     username = message.from_user.first_name
 
-    if await is_manager(str(message.from_user.id)):
+    if await is_manager(message.from_user.id):
         await state.set_state(FSMManagerPanel.start)
 
         await message.answer(

@@ -1,15 +1,17 @@
-from core.database.requests.billboards import get_billboard
+from core.database.requests.billboards import get_billboard_by_name
+from core.database.models.db_models import Billboard
 
 
-async def get_billboard_info(billboard_id: str):
+async def get_billboard_info_by_name(billboard_name: str) -> str:
 
-    billboard_data = await get_billboard(billboard_id)
+    billboard_data: Billboard = await get_billboard_by_name(billboard_name)
 
     billboard_info = {
+        "Название": billboard_data.name,
         "Ширина": billboard_data.width,
         "Высота": billboard_data.height,
         "Стороны": billboard_data.sides,
-        "Материал": billboard_data.surface,
+        "Тип": billboard_data.surface,
         "Адрес": billboard_data.address,
         "Цена за день": billboard_data.pricePerDay
     }
@@ -21,3 +23,10 @@ async def get_billboard_info(billboard_id: str):
 
     return text_to_send
 
+
+async def billboard_exists(billboard_name: str) -> bool:
+
+    if not await get_billboard_by_name(billboard_name):
+        return False
+
+    return True

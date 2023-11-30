@@ -5,7 +5,7 @@ from aiogram import Bot, Dispatcher
 import logging
 import asyncio
 
-from core.handlers import manager_handlers, create_billboard_handlers
+from core.handlers.billboards import create_billboard_handlers
 from creds import BOT_TOKEN
 
 from core.handlers import *
@@ -46,6 +46,7 @@ async def main():
     dp.include_router(command_handlers.command_router)
     dp.include_router(manager_handlers.manager_router)
     dp.include_router(create_billboard_handlers.create_billboard_router)
+    dp.include_router(billboards_handlers.billboards_router)
     dp.include_router(users_handlers.users_router)
 
     # Создаем модели базы данных, если их нет

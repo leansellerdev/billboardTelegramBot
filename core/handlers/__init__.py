@@ -1,1 +1,4 @@
-from . import action_handlers, registration_handlers, admin_handlers, command_handlers, users_handlers
+from .users import users_handlers, command_handlers, registration_handlers
+from .staff import manager_handlers, admin_handlers
+from .billboards import create_billboard_handlers, billboards_handlers
+from . import action_handlers

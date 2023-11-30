@@ -17,7 +17,7 @@ async def self_orders(message: Message, state: FSMContext):
     )
 
 
-@users_router.message(F.text == "Биллборды", FSMStart.start)
+@users_router.message(F.text == "Билборды", FSMStart.start)
 async def billboards(message: Message, state: FSMContext):
 
     # await state.set_state(FSMStart.billboards)

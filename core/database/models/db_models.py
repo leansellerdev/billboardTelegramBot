@@ -19,7 +19,8 @@ class Billboard(Base):
     __tablename__ = "billboards"
 
     id: Mapped[int] = mapped_column(primary_key=True, unique=True)
-    width: Mapped[str] = mapped_column()
+    name: Mapped[str] = mapped_column(String(50))
+    width: Mapped[str] = mapped_column(String(50))
     height: Mapped[str] = mapped_column(String(50))
     sides: Mapped[str] = mapped_column(String(50))
     surface: Mapped[str] = mapped_column(String(50))
@@ -29,7 +30,8 @@ class Billboard(Base):
     booking: Mapped[List["Booking"]] = relationship(back_populates="billboard")
 
     def __repr__(self):
-        return "billboard " + self.id
+        return f"Billboard(id={self.id!r}), name={self.name!r}, surface={self.surface!r}, address={self.address!r}, " \
+               f"pricePerDay={self.pricePerDay!r}"
 
 
 class Order(Base):

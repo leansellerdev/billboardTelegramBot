@@ -11,11 +11,11 @@ cancel_kb_builder: ReplyKeyboardBuilder = ReplyKeyboardBuilder()
 go_back_kb_builder: ReplyKeyboardBuilder = ReplyKeyboardBuilder()
 
 start_buttons_registered = [
-    "Мои заказы", "Биллборды", "О нас"
+    "Мои заказы", "Билборды", "О нас"
 ]
 
 start_buttons_not_registered = [
-    "Регистрация", "Биллборды", "О нас"
+    "Регистрация", "Билборды", "О нас"
 ]
 
 start_buttons_admin_panel = [
@@ -23,7 +23,7 @@ start_buttons_admin_panel = [
 ]
 
 start_buttons_manager_panel = [
-    "Мои клиенты", "Биллборды", "Статистика"
+    "Мои клиенты", "Билборды", "Статистика"
 ]
 
 cancel_button = KeyboardButton(text="Отмена")

@@ -18,7 +18,7 @@ async def is_admin(user_id):
     return True
 
 
-async def is_manager(user_id: str):
+async def is_manager(user_id):
 
     if not await get_staff(user_id):
         return False
@@ -42,25 +42,6 @@ async def id_valid(user_id: str):
         return False
 
     return True
-
-
-async def get_user_info(user_id):
-
-    user_data = await get_user(user_id)
-
-    user_info = {
-        "Имя": user_data.name,
-        "Фамилия": user_data.surname,
-        "Почта": user_data.email,
-        "Номер телефона": user_data.phone_number
-    }
-
-    text_to_send = ""
-
-    for key, value in user_info.items():
-        text_to_send += f"{key}: {value}\n"
-
-    return text_to_send
 
 
 async def create_excel_to_send(users: list[User, Staff]):

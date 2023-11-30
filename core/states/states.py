@@ -47,6 +47,13 @@ class FSMManagerPanel(StatesGroup):
     statistics = State()
 
 
+class FSMBillboards(StatesGroup):
+
+    billboard_name = State()
+    choose_action = State()
+    change_price = State()
+
+
 class FSMCreateBillboard(StatesGroup):
 
     width = State()

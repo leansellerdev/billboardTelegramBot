@@ -51,8 +51,7 @@ async def create_excel_to_send_manager_users(users: list[User, Staff]):
             "name": user.name,
             "surname": user.surname,
             "email": user.email,
-            "phone_number": user.phone_number,
-            #"status_isManager": user.isManager
+            "phone_number": user.phone_number
         }
 
         data.append(dt)

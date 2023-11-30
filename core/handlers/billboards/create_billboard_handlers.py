@@ -6,7 +6,7 @@ from core.buttons.action_buttons import manager_panel_kb_builder
 from core.buttons.create_billboard_buttons import create_billboard_end_kb_builder
 from core.database.requests.billboards import create_billboard
 from core.states.states import FSMCreateBillboard, FSMManagerPanel, FSMStart
-from core.utils.billboard_utils import get_billboard_info
+from core.utils.billboard_utils import get_billboard_info_by_name
 
 create_billboard_router: Router = Router()
 
@@ -24,7 +24,7 @@ async def billboard_create(callback: CallbackQuery, state: FSMContext):
         show_alert=True
     )
 
-    billboard_info = await get_billboard_info("1")  # data.get("id", None)
+    billboard_info = await get_billboard_info_by_name(data["name"])  # data.get("id", None)
 
     await callback.message.delete()
     await callback.message.answer(

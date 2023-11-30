@@ -9,6 +9,7 @@ from core.states.states import FSMManagerPanel
 from core.buttons.manager_buttons import (manager_panel_statistics_kb_builder,
                                           manager_clients_actions_kb_builder,
                                           manager_billboards_actions_kb_builder)
+from core.buttons.action_buttons import manager_panel_kb_builder
 from core.utils.staff_utils import create_excel_to_send_manager_orders
 from core.utils.users_utils import create_excel_to_send_manager_users, excel_path, delete_excel_file
 
@@ -65,13 +66,26 @@ async def manager_orders(callback: CallbackQuery, state: FSMContext):
     await state.set_state(FSMManagerPanel.start)
 
 
-@manager_router.message(F.text == "Биллборды", FSMManagerPanel.start)
+@manager_router.message(F.text == "Билборды", FSMManagerPanel.start)
 async def billboards(message: Message, state: FSMContext):
 
     await state.set_state(FSMManagerPanel.billboards)
     await message.answer(
         text="Выберите действие",
         reply_markup=manager_billboards_actions_kb_builder.as_markup(
+            resize_keyboard=True
+        )
+    )
+
+
+@manager_router.message(F.text == "Назад", FSMManagerPanel.billboards)
+async def go_back_to_manager_menu(message: Message, state: FSMContext):
+
+    await state.set_state(FSMManagerPanel.start)
+
+    await message.answer(
+        text="Выберите действие:",
+        reply_markup=manager_panel_kb_builder.as_markup(
             resize_keyboard=True
         )
     )
@@ -88,15 +102,14 @@ async def statistics(message: Message, state: FSMContext):
     )
 
 
-# @manager_router.message(FSMManagerPanel.billboards)
-# @manager_router.message(F.text == "Назад", FSMManagerPanel.statistics)
-# async def go_back_to_manager_menu(message: Message, state: FSMContext):
-#
-#     await state.set_state(FSMStart.start)
-#
-#     await message.answer(
-#         text="Выберите действие:",
-#         reply_markup=manager_panel_kb_builder.as_markup(
-#             resize_keyboard=True
-#         )
-#     )
+@manager_router.message(F.text == "Назад", FSMManagerPanel.statistics)
+async def go_back_to_manager_menu(message: Message, state: FSMContext):
+
+    await state.set_state(FSMManagerPanel.start)
+
+    await message.answer(
+        text="Выберите действие:",
+        reply_markup=manager_panel_kb_builder.as_markup(
+            resize_keyboard=True
+        )
+    )
