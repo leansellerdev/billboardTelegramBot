@@ -1,5 +1,11 @@
+import os
+
+import pandas as pd
+
 from core.database.requests.billboards import get_billboard_by_name
 from core.database.models.db_models import Billboard
+
+excel_path = "core/utils/temp/users.xlsx"
 
 
 async def get_billboard_info_by_name(billboard_name: str) -> str:
@@ -30,3 +36,35 @@ async def billboard_exists(billboard_name: str) -> bool:
         return False
 
     return True
+
+
+async def create_excel_to_send_all_billboards(billboards: list[Billboard]):
+
+    data = []
+
+    for i, billboard in enumerate(billboards):
+
+        dt = {
+            "name": billboard.name,
+            "width": billboard.width,
+            "height": billboard.height,
+            "surface": billboard.surface,
+            "sides": billboard.sides,
+            "address": billboard.address,
+            "pricePerDay": billboard.pricePerDay
+        }
+
+        data.append(dt)
+
+    df = pd.DataFrame(data)
+    df.to_excel(excel_path, index=False)
+
+    return data
+
+
+async def delete_excel_file():
+
+    if not os.path.exists(excel_path):
+        return
+
+    os.remove(excel_path)

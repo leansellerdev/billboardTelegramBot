@@ -7,7 +7,9 @@ from core.database.models.db_models import Billboard
 
 from core.database.requests.staff import basedir
 
-engine = create_engine(f"sqlite:///{os.path.join(basedir, 'database.db')}", echo=True)
+from core.database.requests.staff import engine
+
+#engine = create_engine(f"sqlite:///{os.path.join(basedir, 'database.db')}", echo=True)
 session: Session(engine) = Session(engine)
 
 
@@ -34,6 +36,15 @@ async def get_billboard_by_id(billboard_id: str):
     return billboard
 
 
+async def get_all_billboards():
+
+    billboard: list[[Billboard]] = session.query(Billboard).all()
+
+    return billboard
+
+
+
+
 async def get_billboard_by_name(billboard_name: str):
     with session:
         billboard: Billboard = session.query(Billboard).filter(Billboard.name == billboard_name).scalar()
@@ -43,8 +54,7 @@ async def get_billboard_by_name(billboard_name: str):
 
 async def change_price(billboard_name: str, new_price: str):
 
-    with session:
-        billboard = session.scalar(select(Billboard).filter_by(name=billboard_name))
-        billboard.pricePerDay = float(new_price)
+    billboard = session.scalar(select(Billboard).filter_by(name=billboard_name))
+    billboard.pricePerDay = float(new_price)
 
-        session.commit()
+    session.commit()

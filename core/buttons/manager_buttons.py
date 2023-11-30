@@ -12,7 +12,7 @@ statistics_buttons_manager_panel = [
 ]
 
 billboards_actions: list = [
-    "Изменить билборд", "Добавить билборд", "Назад"
+    "Изменить билборд", "Добавить билборд", "Список билбордов", "Назад"
 ]
 
 clients_actions_buttons: list[InlineKeyboardButton] = [

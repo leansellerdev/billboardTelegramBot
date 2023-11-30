@@ -6,8 +6,8 @@ from sqlalchemy.orm import Session
 from core.database.models.db_models import User
 
 from .staff import basedir
-
-engine = create_engine(f"sqlite:///{os.path.join(basedir, 'database.db')}", echo=True)
+from core.database.requests.staff import engine
+#engine = create_engine(f"sqlite:///{os.path.join(basedir, 'database.db')}", echo=True)
 session: Session(engine) = Session(engine)
 
 
@@ -36,20 +36,18 @@ async def get_user(user_id: int):
 
 async def change_user_phone(user_id: int, new_phone_number):
 
-    with session:
-        user = session.scalar(select(User).filter_by(telegram_id=user_id))
-        user.phone_number = new_phone_number
+    user = session.scalar(select(User).filter_by(telegram_id=user_id))
+    user.phone_number = new_phone_number
 
-        session.commit()
+    session.commit()
 
 
 async def change_user_email(user_id: int, new_email_address: str):
 
-    with session:
-        user = session.scalar(select(User).filter_by(telegram_id=user_id))
-        user.email = new_email_address
+    user = session.scalar(select(User).filter_by(telegram_id=user_id))
+    user.email = new_email_address
 
-        session.commit()
+    session.commit()
 
 
 async def get_all_users():

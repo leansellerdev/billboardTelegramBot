@@ -41,15 +41,14 @@ async def get_manager(staff_id: str):
 
 
 async def get_manager_orders(staff_id: str):
-    with session:
-        staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id, Staff.isManager == 1).scalar()
+
+    staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id, Staff.isManager == 1).scalar()
 
     return staff.orders
 
 
 async def get_manager_users(staff_id: str):
-    with session:
-        staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id).scalar()
+    staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id).scalar()
 
     return staff.users
 
@@ -73,20 +72,16 @@ async def get_all_managers():
 
 async def change_staff_phone(staff_id: int, new_phone_number):
 
-    with session:
-
-        staff: Staff = session.scalar(select(Staff).filter_by(telegram_id=staff_id))
-        staff.phone_number = new_phone_number
-        session.commit()
+    staff: Staff = session.scalar(select(Staff).filter_by(telegram_id=staff_id))
+    staff.phone_number = new_phone_number
+    session.commit()
 
 
 async def change_staff_email(staff_id: int, new_email_address: str):
 
-    with session:
-
-        staff: Staff = session.scalar(select(Staff).filter_by(telegram_id=staff_id))
-        staff.email = new_email_address
-        session.commit()
+    staff: Staff = session.scalar(select(Staff).filter_by(telegram_id=staff_id))
+    staff.email = new_email_address
+    session.commit()
 
 
 async def set_manager_status(user_id: str, status: bool):

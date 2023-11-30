@@ -4,12 +4,14 @@ from aiogram import Router, F
 from aiogram.types import Message, FSInputFile, CallbackQuery
 from aiogram.fsm.context import FSMContext
 
+from core.database.requests.billboards import get_all_billboards
 from core.database.requests.staff import get_manager_users, get_manager_orders
 from core.states.states import FSMManagerPanel
 from core.buttons.manager_buttons import (manager_panel_statistics_kb_builder,
                                           manager_clients_actions_kb_builder,
                                           manager_billboards_actions_kb_builder)
 from core.buttons.action_buttons import manager_panel_kb_builder
+from core.utils.billboard_utils import create_excel_to_send_all_billboards
 from core.utils.staff_utils import create_excel_to_send_manager_orders
 from core.utils.users_utils import create_excel_to_send_manager_users, excel_path, delete_excel_file
 
@@ -31,7 +33,6 @@ async def manager_clients(message: Message, state: FSMContext):
 
 @manager_router.callback_query(F.data == "clients_list", FSMManagerPanel.my_clients)
 async def clients_list(callback: CallbackQuery, state: FSMContext):
-
     manager_id = str(callback.from_user.id)
     manager_users_list = await get_manager_users(manager_id)
     excel_file = FSInputFile(excel_path, filename=f"manager-{manager_id}-users-{today}.xlsx")
@@ -50,7 +51,6 @@ async def clients_list(callback: CallbackQuery, state: FSMContext):
 
 @manager_router.callback_query(F.data == "orders", FSMManagerPanel.my_clients)
 async def manager_orders(callback: CallbackQuery, state: FSMContext):
-
     order_list = await get_manager_orders(str(callback.from_user.id))
 
     excel_file = FSInputFile(excel_path, filename=f"manager-{str(callback.from_user.id)}-orders-{today}.xlsx")
@@ -68,7 +68,6 @@ async def manager_orders(callback: CallbackQuery, state: FSMContext):
 
 @manager_router.message(F.text == "Билборды", FSMManagerPanel.start)
 async def billboards(message: Message, state: FSMContext):
-
     await state.set_state(FSMManagerPanel.billboards)
     await message.answer(
         text="Выберите действие",
@@ -78,9 +77,25 @@ async def billboards(message: Message, state: FSMContext):
     )
 
 
+@manager_router.message(F.text == "Список билбордов", FSMManagerPanel.billboards)
+async def billboards(message: Message, state: FSMContext):
+    billboard_list = await get_all_billboards()
+
+    excel_file = FSInputFile(excel_path, filename=f"billboards-{today}.xlsx")
+
+    await create_excel_to_send_all_billboards(billboard_list)
+    await message.answer_document(
+        document=excel_file,
+        reply_markup=manager_billboards_actions_kb_builder.as_markup(
+            resize_keyboard=True
+        ))
+    await message.delete()
+
+    await delete_excel_file()
+
+
 @manager_router.message(F.text == "Назад", FSMManagerPanel.billboards)
 async def go_back_to_manager_menu(message: Message, state: FSMContext):
-
     await state.set_state(FSMManagerPanel.start)
 
     await message.answer(
@@ -93,7 +108,6 @@ async def go_back_to_manager_menu(message: Message, state: FSMContext):
 
 @manager_router.message(F.text == "Статистика", FSMManagerPanel.start)
 async def statistics(message: Message, state: FSMContext):
-
     await state.set_state(FSMManagerPanel.statistics)
 
     await message.answer(
@@ -104,7 +118,6 @@ async def statistics(message: Message, state: FSMContext):
 
 @manager_router.message(F.text == "Ст-ка по билборду", FSMManagerPanel.statistics)
 async def statistics_by_billboard(message: Message):
-
     await message.answer(
         text="Статистика появится когда будет реализован функционал бронирования билборда",
     )
@@ -112,7 +125,6 @@ async def statistics_by_billboard(message: Message):
 
 @manager_router.message(F.text == "Ст-ка всех билбордов", FSMManagerPanel.statistics)
 async def statistics_full(message: Message):
-
     await message.answer(
         text="Статистика появится когда будет реализован функционал бронирования билборда",
     )
@@ -120,7 +132,6 @@ async def statistics_full(message: Message):
 
 @manager_router.message(F.text == "Назад", FSMManagerPanel.statistics)
 async def go_back_to_manager_menu(message: Message, state: FSMContext):
-
     await state.set_state(FSMManagerPanel.start)
 
     await message.answer(

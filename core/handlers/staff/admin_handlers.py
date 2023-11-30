@@ -49,7 +49,7 @@ async def personnel_management(message: Message, state: FSMContext):
     )
 
 
-@admin_router.message(F.text == "Менеджеры", FSMStart.start)
+@admin_router.message(F.text == "Менеджеры", FSMAdminPanel.start)
 async def managers(message: Message):
 
     managers_list = await get_all_managers()
@@ -67,7 +67,7 @@ async def managers(message: Message):
 @admin_router.message(F.text == "Назад", FSMAdminPanel.personal_management)
 async def go_back_to_main(message: Message, state: FSMContext):
 
-    await state.set_state(FSMStart.start)
+    await state.set_state(FSMAdminPanel.start)
 
     await message.answer(
         text=f'Выберите действие:',
