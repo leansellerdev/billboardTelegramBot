@@ -27,24 +27,30 @@ async def create_staff(staff: dict):
 
 
 async def get_staff(staff_id: str):
+    with session:
+        staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id).scalar()
 
-    staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id).scalar()
     return staff
 
 
 async def get_manager(staff_id: str):
-    staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id, Staff.isManager == 1).scalar()
+    with session:
+        staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id, Staff.isManager == 1).scalar()
+
     return staff
 
 
 async def get_manager_orders(staff_id: str):
-    staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id, Staff.isManager == 1).scalar()
+    with session:
+        staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id, Staff.isManager == 1).scalar()
+
     return staff.orders
 
 
 async def get_manager_users(staff_id: str):
+    with session:
+        staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id).scalar()
 
-    staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id).scalar()
     return staff.users
 
 
@@ -59,8 +65,9 @@ async def delete_staff(staff_id: str):
 
 
 async def get_all_managers():
+    with session:
+        staffs = session.query(Staff).filter(Staff.isManager == 1).all()
 
-    staffs = session.query(Staff).filter(Staff.isManager == 1).all()
     return staffs
 
 

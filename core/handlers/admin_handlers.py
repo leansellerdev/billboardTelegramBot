@@ -23,7 +23,7 @@ admin_router: Router = Router()
 today = datetime.now().strftime("%d-%m-%Y")
 
 
-@admin_router.message(F.text == "Пользователи", FSMStart.start)
+@admin_router.message(F.text == "Пользователи", FSMAdminPanel.start)
 async def users(message: Message):
 
     users_list = await get_all_users()
@@ -38,7 +38,7 @@ async def users(message: Message):
     await delete_excel_file()
 
 
-@admin_router.message(F.text == "Управление персоналом", FSMStart.start)
+@admin_router.message(F.text == "Управление персоналом", FSMAdminPanel.start)
 async def personnel_management(message: Message, state: FSMContext):
 
     await state.set_state(FSMAdminPanel.personal_management)
@@ -141,7 +141,7 @@ async def unset_manager_by_admin(callback: CallbackQuery, state: FSMContext):
             )
         )
 
-        await state.set_state(FSMStart.start)
+        await state.set_state(FSMAdminPanel.start)
     else:
         await callback.answer(
             text="Пользователь с данным ID не является менеджером"

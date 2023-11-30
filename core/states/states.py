@@ -8,6 +8,7 @@ storage: RedisStorage = RedisStorage(redis=redis)
 
 
 class FSMStart(StatesGroup):
+
     start = State()
     self_orders = State()
     billboards = State()
@@ -31,6 +32,7 @@ class FSMChangeData(StatesGroup):
 
 class FSMAdminPanel(StatesGroup):
 
+    start = State()
     get_users = State()
     personal_management = State()
     set_manager = State()
@@ -39,6 +41,7 @@ class FSMAdminPanel(StatesGroup):
 
 class FSMManagerPanel(StatesGroup):
 
+    start = State()
     my_clients = State()
     billboards = State()
     statistics = State()

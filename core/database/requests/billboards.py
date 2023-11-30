@@ -17,7 +17,7 @@ async def create_billboard(billboard: dict):
             surface=billboard["surface"],
             address=billboard["address"],
             pricePerDay=billboard["pricePerDay"],
-            booking=billboard["booking"]
+            # booking=billboard["booking"]
         )
         session.add(billboard)
         session.commit()

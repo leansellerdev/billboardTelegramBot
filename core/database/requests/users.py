@@ -24,8 +24,8 @@ async def create_user(user: dict):
 
 
 async def get_user(user_id: int):
-
-    user = session.query(User).filter(User.telegram_id == user_id).scalar()
+    with session:
+        user = session.query(User).filter(User.telegram_id == user_id).scalar()
 
     return user
 
@@ -49,6 +49,9 @@ async def change_user_email(user_id: int, new_email_address: str):
 
 
 async def get_all_users():
-    users: list[User] = session.query(User).all()
+
+    with session:
+        users: list[[User]] = session.query(User).all()
+
     return users
 
