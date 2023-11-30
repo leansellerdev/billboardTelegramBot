@@ -55,7 +55,7 @@ class FSMBillboards(StatesGroup):
 
 
 class FSMCreateBillboard(StatesGroup):
-
+    name = State()
     width = State()
     height = State()
     sides = State()

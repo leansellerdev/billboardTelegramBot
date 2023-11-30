@@ -5,7 +5,7 @@ from core.database.models.db_models import Staff, User
 from sqlalchemy.orm import Session
 # from core.database.requests.db_users import engine
 
-basedir = r"C:\Users\ddudk\Desktop\pycharmprojects\billboardTelegramBot"
+basedir = r"C:\IITU\python\billboardTelegramBot"
 
 engine = create_engine(f"sqlite:///{os.path.join(basedir, 'database.db')}", echo=True)
 session: Session = Session(engine)

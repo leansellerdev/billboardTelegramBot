@@ -14,6 +14,7 @@ session: Session(engine) = Session(engine)
 async def create_billboard(billboard: dict):
     with session:
         billboard: Billboard = Billboard(
+            name=billboard["name"],
             width=billboard["width"],
             height=billboard["height"],
             sides=billboard["sides"],

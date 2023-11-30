@@ -102,6 +102,22 @@ async def statistics(message: Message, state: FSMContext):
     )
 
 
+@manager_router.message(F.text == "Ст-ка по билборду", FSMManagerPanel.statistics)
+async def statistics_by_billboard(message: Message):
+
+    await message.answer(
+        text="Статистика появится когда будет реализован функционал бронирования билборда",
+    )
+
+
+@manager_router.message(F.text == "Ст-ка всех билбордов", FSMManagerPanel.statistics)
+async def statistics_full(message: Message):
+
+    await message.answer(
+        text="Статистика появится когда будет реализован функционал бронирования билборда",
+    )
+
+
 @manager_router.message(F.text == "Назад", FSMManagerPanel.statistics)
 async def go_back_to_manager_menu(message: Message, state: FSMContext):
 

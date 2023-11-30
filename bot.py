@@ -37,7 +37,7 @@ async def main():
     logger.info('Starting Bot')
 
     # Регистрируем middlewares
-    dp.message.middleware.register(ThrottlingMiddleware(storage=storage))
+    # dp.message.middleware.register(ThrottlingMiddleware(storage=storage))
 
     # Регистрируем обработчики
     dp.include_router(action_handlers.router)
