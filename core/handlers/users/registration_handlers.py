@@ -5,7 +5,7 @@ from aiogram.filters.command import Command
 
 from core.states.states import FSMRegistration, FSMStart
 from core.buttons.registration_buttons import reg_end_kb_builder
-from core.buttons.action_buttons import registered_kb_builder, go_back_kb_builder, not_registered_kb_builder
+from core.buttons.action_buttons import user_panel_kb_builder, go_back_kb_builder, not_registered_kb_builder
 
 from core.database.requests.users import create_user
 from core.utils.users_utils import user_registered, get_user_info
@@ -32,7 +32,7 @@ async def reg_end(callback: CallbackQuery, state: FSMContext):
     await callback.message.delete()
     await callback.message.answer(
         text=user_info,
-        reply_markup=registered_kb_builder.as_markup(
+        reply_markup=user_panel_kb_builder.as_markup(
             resize_keyboard=True
         )
     )

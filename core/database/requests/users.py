@@ -34,6 +34,19 @@ async def get_user(user_id: int):
     return user
 
 
+async def get_user_manager_id(user_id: int):
+    with session:
+        user = session.query(User).filter(User.telegram_id == user_id).scalar()
+
+    return user.manager_id
+
+async def get_user_manager_id(user_id: int):
+    with session:
+        user = session.query(User).filter(User.telegram_id == user_id).scalar()
+
+    return user.manager_id
+
+
 async def change_user_phone(user_id: int, new_phone_number):
 
     user = session.scalar(select(User).filter_by(telegram_id=user_id))

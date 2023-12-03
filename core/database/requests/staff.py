@@ -40,6 +40,20 @@ async def get_manager(staff_id: str):
     return staff
 
 
+async def get_manager_by_id(staff_id: str):
+    with session:
+        staff: Staff = session.query(Staff).filter(Staff.id == staff_id, Staff.isManager == 1).scalar()
+
+    return staff
+
+
+async def get_manager_telegram_id_by_id(staff_id: str):
+    with session:
+        staff: Staff = session.query(Staff).filter(Staff.id == staff_id, Staff.isManager == 1).scalar()
+
+    return staff.telegram_id
+
+
 async def get_manager_orders(staff_id: str):
 
     staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id, Staff.isManager == 1).scalar()

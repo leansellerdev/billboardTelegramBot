@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.filters.command import Command
 
 from core.states.states import FSMStart, FSMChangeData
-from core.buttons.action_buttons import cancel_kb_builder, registered_kb_builder
+from core.buttons.action_buttons import cancel_kb_builder, user_panel_kb_builder
 
 from core.database.requests.users import change_user_phone, change_user_email
 
@@ -41,7 +41,7 @@ async def complete_change_phone_number(message: Message, state: FSMContext):
     await change_user_phone(message.from_user.id, message.text)
     await message.answer(
         text=f"Ваш номер успешно изменен на {message.text}",
-        reply_markup=registered_kb_builder.as_markup(
+        reply_markup=user_panel_kb_builder.as_markup(
             resize_keyboard=True
         )
     )
@@ -84,7 +84,7 @@ async def complete_change_email_address(message: Message, state: FSMContext):
     await change_user_email(message.from_user.id, message.text)
     await message.answer(
         text=f"Ваш адрес электронной почты успешно изменен на {message.text}",
-        reply_markup=registered_kb_builder.as_markup(
+        reply_markup=user_panel_kb_builder.as_markup(
             resize_keyboard=True
         )
     )

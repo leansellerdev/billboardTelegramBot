@@ -148,6 +148,19 @@ async def unset_manager_by_admin(callback: CallbackQuery, state: FSMContext):
         )
 
 
+@admin_router.message(F.text == "Назад", FSMAdminPanel.set_manager)
+async def go_back_to_main(message: Message, state: FSMContext):
+
+    await state.set_state(FSMAdminPanel.start)
+
+    await message.answer(
+        text=f'Выберите действие:',
+        reply_markup=admin_panel_kb_builder.as_markup(
+            resize_keyboard=True
+        )
+    )
+
+
 # @admin_router.callback_query(F.data == "set_manager", FSMAdminPanel.personal_management)
 # async def set_manager(callback: CallbackQuery, state: FSMContext):
 #     # staff_id = int(callback.text)
