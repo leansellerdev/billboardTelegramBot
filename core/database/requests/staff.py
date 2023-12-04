@@ -3,10 +3,10 @@ from sqlalchemy import select, create_engine
 
 from core.database.models.db_models import Staff, User
 from sqlalchemy.orm import Session
-# from core.database.requests.db_users import engine
 
-basedir = r"C:\IITU\python\billboardTelegramBot"
+# basedir = r"C:\IITU\python\billboardTelegramBot"
 
+basedir = r"C:\Users\ddudk\Desktop\pycharmprojects\billboardTelegramBot"
 engine = create_engine(f"sqlite:///{os.path.join(basedir, 'database.db')}", echo=True)
 session: Session = Session(engine)
 
