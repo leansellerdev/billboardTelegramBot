@@ -16,10 +16,11 @@ async def create_user(user: dict):
     with session:
         user: User = User(
             telegram_id=user["tg_id"],
-            name=user["name"],
-            surname=user["surname"],
+            name=user["name"].title(),
+            surname=user["surname"].title(),
             email=user["email"],
-            phone_number=user["phone_number"].replace(" ", "")
+            phone_number=user["phone_number"].replace(" ", ""),
+            manager_id=user["manager_id"]
         )
 
         session.add(user)

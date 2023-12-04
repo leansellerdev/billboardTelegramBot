@@ -64,17 +64,17 @@ async def communication_with_manager(message: Message):
     manager_id = await get_user_manager_id(message.from_user.id)
     manager = await get_manager_by_id(manager_id)
 
-    if not manager:
-        await message.answer(
-            text="Менеджер будет назначен после оформления первого заказа\n"
-                 "Вы можете связаться с нами по следующим номерам: \n"
-                 "\n+99999999999 \n+79993365542 \n+75936541258"
-        )
-    else:
-        await message.answer(
-            text=f"Ваш менеджер: [{manager.name} {manager.surname}](tg://user?id={str(manager.telegram_id)})",
-            parse_mode="Markdown"
-        )
+    # if not manager:
+    #     await message.answer(
+    #         text="Менеджер будет назначен после оформления первого заказа\n"
+    #              "Вы можете связаться с нами по следующим номерам: \n"
+    #              "\n+99999999999 \n+79993365542 \n+75936541258"
+    #     )
+    # else:
+    await message.answer(
+        text=f"Ваш менеджер: [{manager.name} {manager.surname}](tg://user?id={str(manager.telegram_id)})",
+        parse_mode="Markdown"
+    )
 
 
 @users_router.message(F.text == "Назад", FSMStart.about)

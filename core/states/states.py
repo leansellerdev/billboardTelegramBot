@@ -30,6 +30,7 @@ class FSMRegistration(StatesGroup):
     surname = State()
     email = State()
     phone_number = State()
+    manager_id = State()
     end = State()
 
 

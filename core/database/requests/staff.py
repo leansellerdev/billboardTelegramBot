@@ -4,9 +4,9 @@ from sqlalchemy import select, create_engine
 from core.database.models.db_models import Staff, User
 from sqlalchemy.orm import Session
 
-# basedir = r"C:\IITU\python\billboardTelegramBot"
+basedir = r"C:\IITU\python\billboardTelegramBot"
 
-basedir = r"C:\Users\ddudk\Desktop\pycharmprojects\billboardTelegramBot"
+#basedir = r"C:\Users\ddudk\Desktop\pycharmprojects\billboardTelegramBot"
 engine = create_engine(f"sqlite:///{os.path.join(basedir, 'database.db')}", echo=True)
 session: Session = Session(engine)
 
@@ -65,6 +65,11 @@ async def get_manager_users(staff_id: str):
     staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id).scalar()
 
     return staff.users
+
+
+async def get_manager_with_min_users():
+    manager = session.query(Staff, User).order_by(Staff.users).first()
+    return manager[0].id
 
 
 async def delete_staff(staff_id: str):

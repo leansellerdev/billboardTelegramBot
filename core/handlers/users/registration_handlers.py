@@ -3,6 +3,7 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 from aiogram.filters.command import Command
 
+from core.database.requests.staff import get_manager_with_min_users
 from core.states.states import FSMRegistration, FSMStart
 from core.buttons.registration_buttons import reg_end_kb_builder
 from core.buttons.action_buttons import user_panel_kb_builder, go_back_kb_builder, not_registered_kb_builder
@@ -172,8 +173,11 @@ async def process_incorrect_email(message: Message):
 @reg_router.message(PhoneFilter(), FSMRegistration.phone_number)
 async def reg_end(message: Message, state: FSMContext):
 
+    manager_id = await get_manager_with_min_users()
+
     await state.update_data(
-        phone_number=message.text
+        phone_number=message.text,
+        manager_id=manager_id
     )
 
     await state.set_state(FSMRegistration.end)
