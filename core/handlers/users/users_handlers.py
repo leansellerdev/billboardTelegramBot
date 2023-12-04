@@ -2,11 +2,17 @@ from aiogram import Router, F
 from aiogram.types import Message
 from aiogram.fsm.context import FSMContext
 
-from core.buttons.user_buttons import user_panel_about_us_kb_builder
+from core.buttons.user_buttons import user_panel_about_us_kb_builder, user_billboards_kb_builder
 from core.buttons.action_buttons import user_panel_kb_builder
-from core.database.requests.staff import get_manager_telegram_id_by_id, get_manager, get_manager_by_id
-from core.database.requests.users import get_user, get_user_manager_id
-from core.states.states import FSMStart
+
+from core.database.requests.staff import get_manager_by_id
+from core.database.requests.users import get_user_manager_id
+from core.database.requests.billboards import get_billboards_by_district
+
+from core.states.states import FSMStart, FSMMakeOrder
+
+from core.filters.billboard_filters import BillboardDistrictExists
+from core.utils.billboard_utils import get_billboard_info_by_name
 
 users_router: Router = Router()
 
@@ -24,10 +30,13 @@ async def self_orders(message: Message, state: FSMContext):
 @users_router.message(F.text == "Билборды", FSMStart.start)
 async def billboards(message: Message, state: FSMContext):
 
-    #await state.set_state(FSMStart.billboards)
+    await state.set_state(FSMStart.billboards)
 
     await message.answer(
-        text="Coming Soon..."
+        text="Выберите район расположения билборда: ",
+        reply_markup=user_billboards_kb_builder.as_markup(
+            resize_keyboard=True
+        )
     )
 
 

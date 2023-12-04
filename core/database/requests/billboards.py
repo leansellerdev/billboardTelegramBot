@@ -42,13 +42,18 @@ async def get_all_billboards():
     return billboard
 
 
-
-
 async def get_billboard_by_name(billboard_name: str):
     with session:
         billboard: Billboard = session.query(Billboard).filter(Billboard.name == billboard_name).scalar()
 
     return billboard
+
+
+async def get_billboards_by_district(district: str):
+    with session:
+        billboards: list[[Billboard]] = session.query(Billboard).filter(Billboard.address == district).all()
+
+    return billboards
 
 
 async def change_price(billboard_name: str, new_price: str):

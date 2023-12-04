@@ -2,7 +2,7 @@ import os
 
 import pandas as pd
 
-from core.database.requests.billboards import get_billboard_by_name
+from core.database.requests.billboards import get_billboard_by_name, get_billboards_by_district
 from core.database.models.db_models import Billboard
 
 excel_path = "core/utils/temp/users.xlsx"
@@ -33,6 +33,14 @@ async def get_billboard_info_by_name(billboard_name: str) -> str:
 async def billboard_exists(billboard_name: str) -> bool:
 
     if not await get_billboard_by_name(billboard_name):
+        return False
+
+    return True
+
+
+async def billboard_district_exists(district: str) -> bool:
+
+    if not await get_billboards_by_district(district):
         return False
 
     return True

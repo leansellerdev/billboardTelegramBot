@@ -15,6 +15,15 @@ class FSMStart(StatesGroup):
     about = State()
 
 
+class FSMMakeOrder(StatesGroup):
+
+    choose_billboard = State()
+    start_order = State()
+    start_date = State()
+    end_date = State()
+    complete_order = State()
+
+
 class FSMRegistration(StatesGroup):
 
     name = State()

@@ -48,6 +48,7 @@ async def main():
     dp.include_router(create_billboard_handlers.create_billboard_router)
     dp.include_router(billboards_handlers.billboards_router)
     dp.include_router(users_handlers.users_router)
+    dp.include_router(make_order_handlers.order_router)
 
     # Создаем модели базы данных, если их нет
     if not os.path.exists(os.path.join(basedir, 'database.db')):
