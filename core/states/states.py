@@ -16,12 +16,37 @@ class FSMStart(StatesGroup):
 
 
 class FSMMakeOrder(StatesGroup):
+    client_id = State()
+    manager_id = State()
+    created_date = State()
+    created_date_y = State()
+    created_date_m = State()
+    created_date_d = State()
+    created_date_h = State()
+    created_date_min = State()
+    created_date_s = State()
+    created_date_ms = State()
+
+    order_id = State()
+    billboard_id = State()
+
+    start_date = State()
+    start_date_y = State()
+    start_date_m = State()
+    start_date_d = State()
+
+    end_date = State()
+    end_date_y = State()
+    end_date_m = State()
+    end_date_d = State()
 
     choose_billboard = State()
     start_order = State()
-    start_date = State()
-    end_date = State()
     complete_order = State()
+    cancel_order = State()
+
+    free_period = State()
+    not_free_period = State()
 
 
 class FSMRegistration(StatesGroup):

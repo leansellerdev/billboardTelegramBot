@@ -1,6 +1,7 @@
 from typing import List
 
-from sqlalchemy import ForeignKey, Date, Boolean
+import datetime
+from sqlalchemy import ForeignKey, Date, Boolean, DateTime
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase, relationship
 from sqlalchemy.orm import Mapped
@@ -42,9 +43,10 @@ class Order(Base):
     manager_id: Mapped[int] = mapped_column(ForeignKey("staff.id"))
     manager: Mapped["Staff"] = relationship('Staff', back_populates="orders", foreign_keys=[manager_id])
     booking: Mapped[List["Booking"]] = relationship()
+    created_date: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=False))
 
     def __repr__(self):
-        return "billboard " + self.id
+        return self.id
 
 
 class Booking(Base):

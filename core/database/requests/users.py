@@ -41,6 +41,7 @@ async def get_user_manager_id(user_id: int):
 
     return user.manager_id
 
+
 async def get_user_manager_id(user_id: int):
     with session:
         user = session.query(User).filter(User.telegram_id == user_id).scalar()
