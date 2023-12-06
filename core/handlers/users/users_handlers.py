@@ -1,5 +1,5 @@
 from aiogram import Router, F
-from aiogram.types import Message
+from aiogram.types import Message, CallbackQuery
 from aiogram.fsm.context import FSMContext
 
 from core.buttons.user_buttons import user_panel_about_us_kb_builder, user_billboards_kb_builder
@@ -31,8 +31,20 @@ async def self_orders(message: Message, state: FSMContext):
 async def billboards(message: Message, state: FSMContext):
 
     await state.set_state(FSMStart.billboards)
-
     await message.answer(
+        text="Выберите район расположения билборда: ",
+        reply_markup=user_billboards_kb_builder.as_markup(
+            resize_keyboard=True
+        )
+    )
+
+
+@users_router.callback_query(F.data == "booking_create_continue", FSMMakeOrder.complete_order)
+async def billboards_(callback: CallbackQuery, state: FSMContext):
+
+    await state.set_state(FSMStart.billboards)
+
+    await callback.message.answer(
         text="Выберите район расположения билборда: ",
         reply_markup=user_billboards_kb_builder.as_markup(
             resize_keyboard=True

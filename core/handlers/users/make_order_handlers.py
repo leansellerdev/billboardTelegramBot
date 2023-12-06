@@ -70,24 +70,46 @@ async def start_date(message: Message, state: FSMContext):
     billboard: Billboard = await get_billboard_by_name(message.text)
     user: User = await get_user(message.from_user.id)
     cur_date = datetime.now()
-    await state.update_data(
-        choose_billboard=billboard.name,
-        billboard_id=billboard.id,
-        client_id=user.id,
-        manager_id=user.manager_id,
-        created_date=cur_date.strftime("%Y-%m-%d %H:%M:%S.%f"),
-        created_date_y=int(cur_date.year),
-        created_date_m=int(cur_date.month),
-        created_date_d=int(cur_date.day),
-        created_date_h=int(cur_date.hour),
-        created_date_min=int(cur_date.minute),
-        created_date_s=int(cur_date.second),
-        created_date_ms=int(cur_date.microsecond)
-    )
+    state_data = await state.get_data()
+    print("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
+    print(state_data["is_continue"])
 
-    await create_order(await state.get_data())
+    if "is_continue" not in state_data or not state_data["is_continue"] or state_data["is_continue"] in ("", [], None, 0, False, "False"):
+        await state.update_data(
+            choose_billboard=billboard.name,
+            billboard_id=billboard.id,
+
+            client_id=user.id,
+            manager_id=user.manager_id,
+            created_date=cur_date.strftime("%Y-%m-%d %H:%M:%S.%f"),
+            created_date_y=int(cur_date.year),
+            created_date_m=int(cur_date.month),
+            created_date_d=int(cur_date.day),
+            created_date_h=int(cur_date.hour),
+            created_date_min=int(cur_date.minute),
+            created_date_s=int(cur_date.second),
+            created_date_ms=int(cur_date.microsecond),
+
+            is_continue="True"
+        )
+        print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
+        await create_order(await state.get_data())
+        print("bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb")
+
+    else:  # state_data["is_continue"] == "True"
+        await state.update_data(
+            choose_billboard=billboard.name,
+            billboard_id=billboard.id,
+            is_continue="True"
+        )
+
     booking_data = await state.get_data()
+    print("5555555555555555555555555555555555555555555555555555555")
+    print(user.id)
+    print(user.manager_id)
+    print(booking_data["created_date"])
     order: Order = await get_order(user.id, user.manager_id, booking_data["created_date"])
+
     await state.update_data(
         order_id=order.id
     )
@@ -122,7 +144,6 @@ async def process_unknown_billboard(message: Message):
         text="В выбранном районе нет билборда с таким названием!\n"
              "Напишите одно из названий выше"
     )
-
 
 
 # 3
@@ -204,31 +225,12 @@ async def get_end_date(callback: CallbackQuery,
             )
 
 
-# @order_router.callback_query(F.data, FSMMakeOrder.free_period)
-# async def free_period(callback: CallbackQuery, state: FSMContext):
-#
-#     await callback.message.answer(
-#         text="Билборд забронирован \nПродолжить бронирование билбордов?",
-#         reply_markup=create_booking_end_kb_builder.as_markup(
-#             resize_keyboard=True
-#         )
-#     )
-#
-#
-# @order_router.callback_query(F.data, FSMMakeOrder.not_free_period)
-# async def not_free_period(callback: CallbackQuery, state: FSMContext):
-#     await callback.message.answer(
-#         text="Данный период не доступен для бронирования. \nВыбрать другие даты?",
-#         reply_markup=create_booking_cancel_kb_builder.as_markup(
-#             resize_keyboard=True
-#         )
-#     )
-
-
 # Если букинг прошел удачно и нажата кнопка нет (завершить заказ)
 @order_router.callback_query(F.data == 'booking_end', FSMMakeOrder.complete_order)
 async def booking_end(callback: CallbackQuery, state: FSMContext):
-
+    await state.update_data(
+        is_continue="False"
+    )
     await state.set_state(FSMStart.start)
     await callback.message.delete()
     await callback.message.answer(
@@ -242,6 +244,9 @@ async def booking_end(callback: CallbackQuery, state: FSMContext):
 # Если букинг не прошел удачно и нажата кнопка нет (выбрать другой)
 @order_router.callback_query(F.data == 'booking_cancel', FSMMakeOrder.complete_order)
 async def booking_cancel(callback: CallbackQuery, state: FSMContext):
+    await state.update_data(
+        is_continue="False"
+    )
     state_data = await state.get_data()
     await delete_order(state_data["order_id"])
 
@@ -253,4 +258,3 @@ async def booking_cancel(callback: CallbackQuery, state: FSMContext):
             resize_keyboard=True
         )
     )
-

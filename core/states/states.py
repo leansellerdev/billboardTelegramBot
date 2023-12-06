@@ -47,6 +47,7 @@ class FSMMakeOrder(StatesGroup):
 
     free_period = State()
     not_free_period = State()
+    is_continue = State()
 
 
 class FSMRegistration(StatesGroup):
