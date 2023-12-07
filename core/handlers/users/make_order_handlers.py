@@ -1,7 +1,7 @@
 from datetime import datetime
 
 from aiogram import Router, F
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, FSInputFile
 from aiogram.filters.callback_data import CallbackData
 from aiogram.fsm.context import FSMContext
 
@@ -12,8 +12,8 @@ from core.buttons.create_booking_buttons import create_booking_end_kb_builder, c
     create_order_end_kb_builder
 from core.database.models.db_models import Billboard, User, Order
 from core.database.requests.billboards import get_billboards_by_district, get_billboard_by_name, get_billboard_by_id
-from core.database.requests.booking import is_free_booking_period, create_booking, get_order_bookings
-from core.database.requests.orders import get_order, create_order, update_order_total_price
+from core.database.requests.booking import is_free_booking_period, create_booking, get_order_bookings, delete_booking
+from core.database.requests.orders import get_order, create_order, update_order_total_price, delete_order
 from core.database.requests.users import get_user
 
 from core.states.states import FSMStart, FSMMakeOrder
@@ -23,10 +23,14 @@ from core.buttons.user_buttons import user_billboards_kb_builder
 
 from core.filters.billboard_filters import BillboardDistrictExists, BillboardExistsFilter
 from core.utils.billboard_utils import get_billboard_info_by_name
+from core.utils.order_utils import create_excel_to_send_user_order_bookings, delete_excel_file
 from core.utils.temp.price_utils import calculate_booking_price, calculate_total_order_price
 
-order_router: Router = Router()
+from core.utils.users_utils import excel_path
 
+
+order_router: Router = Router()
+today = datetime.now().strftime("%d-%m-%Y")
 
 # 1
 @order_router.message(BillboardDistrictExists(), FSMStart.billboards)
@@ -303,8 +307,23 @@ async def booking_complete_end(callback: CallbackQuery, state: FSMContext):
     await state.update_data(
         is_continue="False"
     )
-    await state.set_state(FSMStart.start)
 
+    state_data = await state.get_data()
+
+    booking_list = await get_order_bookings(state_data["order_id"])
+
+    excel_file = FSInputFile(excel_path, filename=f"order-{today}.xlsx")
+
+    await create_excel_to_send_user_order_bookings(booking_list, state_data["total_price"])
+
+    await callback.message.answer_document(
+        document=excel_file)
+    await callback.message.delete()
+    await delete_excel_file()
+
+
+
+    await state.set_state(FSMStart.start)
     await callback.message.answer(
         text="Заказ Оформлен\n"
              "\nВыберите действие:",
@@ -320,6 +339,14 @@ async def booking_complete_cancel(callback: CallbackQuery, state: FSMContext):
     await state.update_data(
         is_continue="False"
     )
+
+    state_data = await state.get_data()
+
+    bookings = await get_order_bookings(state_data["order_id"])
+    for booking in bookings:
+        await delete_booking(booking.id)
+    await delete_order(state_data["order_id"])
+
     await state.set_state(FSMStart.start)
 
     await callback.message.answer(
@@ -331,7 +358,7 @@ async def booking_complete_cancel(callback: CallbackQuery, state: FSMContext):
     )
 
 
-# Если букинг не прошел удачно и нажата кнопка нет (выбрать другой)
+# Если букинг не прошел удачно и нажата кнопка нет (выбрать другой билборд)
 @order_router.callback_query(F.data == 'booking_cancel', FSMMakeOrder.complete_order)
 async def booking_cancel(callback: CallbackQuery, state: FSMContext):
     await state.update_data(

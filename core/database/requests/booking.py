@@ -33,6 +33,12 @@ async def get_order_bookings(order_id):
     return bookings
 
 
+async def delete_booking(booking_id):
+    with session:
+        session.query(Booking).filter(Booking.id == booking_id).delete()
+        session.commit()
+
+
 async def is_free_booking_period(billboard_id, date_start, date_end):
     with (session):
         bookings: list[[Booking]] = session.query(Booking).filter(Booking.billboard_id == billboard_id).filter(
