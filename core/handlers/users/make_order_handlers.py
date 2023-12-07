@@ -8,18 +8,18 @@ from aiogram.fsm.context import FSMContext
 from aiogram_calendar.simple_calendar import SimpleCalendar, SimpleCalendarCallback
 from aiogram_calendar import get_user_locale
 
-from core.buttons.create_booking_buttons import create_booking_end_kb_builder, create_booking_cancel_kb_builder
+from core.buttons.create_booking_buttons import create_booking_end_kb_builder, create_booking_cancel_kb_builder, \
+    create_order_end_kb_builder
 from core.database.models.db_models import Billboard, User, Order
 from core.database.requests.billboards import get_billboards_by_district, get_billboard_by_name, get_billboard_by_id
 from core.database.requests.booking import is_free_booking_period, create_booking, get_order_bookings
-from core.database.requests.orders import get_order, create_order, delete_order, get_order_by_id, \
-    update_order_total_price
+from core.database.requests.orders import get_order, create_order, update_order_total_price
 from core.database.requests.users import get_user
 
 from core.states.states import FSMStart, FSMMakeOrder
 
 from core.buttons.action_buttons import go_back_kb_builder, user_panel_kb_builder
-from core.buttons.user_buttons import user_billboards_kb_builder, user_panel_about_us_kb_builder
+from core.buttons.user_buttons import user_billboards_kb_builder
 
 from core.filters.billboard_filters import BillboardDistrictExists, BillboardExistsFilter
 from core.utils.billboard_utils import get_billboard_info_by_name
@@ -31,7 +31,6 @@ order_router: Router = Router()
 # 1
 @order_router.message(BillboardDistrictExists(), FSMStart.billboards)
 async def choose_billboard(message: Message, state: FSMContext):
-
     await state.set_state(FSMMakeOrder.choose_billboard)
 
     billboards = await get_billboards_by_district(message.text)
@@ -68,7 +67,6 @@ async def go_back_to_main_menu(message: Message, state: FSMContext):
 # Сохраняем билборд, пользователя и мэнеджера (создаем Order)
 @order_router.message(BillboardExistsFilter(), FSMMakeOrder.choose_billboard)
 async def start_date(message: Message, state: FSMContext):
-
     billboard: Billboard = await get_billboard_by_name(message.text)
     user: User = await get_user(message.from_user.id)
     cur_date = datetime.now()
@@ -76,7 +74,8 @@ async def start_date(message: Message, state: FSMContext):
     print("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
     print(state_data["is_continue"])
 
-    if "is_continue" not in state_data or not state_data["is_continue"] or state_data["is_continue"] in ("", [], None, 0, False, "False"):
+    if "is_continue" not in state_data or not state_data["is_continue"] or state_data["is_continue"] in (
+            "", [], None, 0, False, "False"):
         await state.update_data(
             choose_billboard=billboard.name,
             billboard_id=billboard.id,
@@ -125,7 +124,6 @@ async def start_date(message: Message, state: FSMContext):
         )
         await create_order(await state.get_data())
 
-
     print("//////////////////////////////////////////////////")
     print(user.id)
     print(user.manager_id)
@@ -149,7 +147,7 @@ async def start_date(message: Message, state: FSMContext):
 @order_router.callback_query(F.data == "booking_change_date", FSMMakeOrder.complete_order)
 async def booking_change_date(callback: CallbackQuery, state: FSMContext):
     await state.set_state(FSMMakeOrder.start_order)
-    #await callback.message.delete()
+    # await callback.message.delete()
     await callback.message.answer(
         text="Выберите дату начала аренды: ",
         reply_markup=await SimpleCalendar(locale=await get_user_locale(
@@ -186,7 +184,6 @@ async def process_unknown_billboard(message: Message):
 async def get_start_date(callback: CallbackQuery,
                          callback_data: CallbackData,
                          state: FSMContext):
-
     selected, date = await SimpleCalendar(locale=await get_user_locale(callback.from_user)).process_selection(
         callback, callback_data)
 
@@ -241,7 +238,7 @@ async def get_end_date(callback: CallbackQuery,
             end_date_y=date.year,
             end_date_m=date.month,
             end_date_d=date.day,
-            price=await calculate_booking_price(billboard.pricePerDay, days.days+1)
+            price=await calculate_booking_price(billboard.pricePerDay, days.days + 1)
         )
         booking_data: dict = await state.get_data()
         await callback.message.delete()
@@ -270,10 +267,9 @@ async def get_end_date(callback: CallbackQuery,
             )
 
 
-# Если букинг прошел удачно и нажата кнопка нет (завершить заказ)
+# Если букинг прошел удачно и нажата кнопка "завершить заказ"
 @order_router.callback_query(F.data == 'booking_end', FSMMakeOrder.complete_order)
 async def booking_end(callback: CallbackQuery, state: FSMContext):
-
     state_data = await state.get_data()
     bookings = await get_order_bookings(state_data["order_id"])
 
@@ -291,10 +287,44 @@ async def booking_end(callback: CallbackQuery, state: FSMContext):
                          f"Конечная дата: {booking.dateEnd}\n"
                          f"Цена: {booking.price}\n")
 
-    await state.set_state(FSMStart.start)
+    await state.set_state(FSMMakeOrder.final_complete_order)
     await callback.message.delete()
     await callback.message.answer(
         text="Ваш заказ:\n" + text_to_send + f"\nИтоговая цена: {state_data['total_price']}",
+        reply_markup=create_order_end_kb_builder.as_markup(
+            resize_keyboard=True
+        )
+    )
+
+
+# Оформление заказа
+@order_router.callback_query(F.data == 'order_complete_end', FSMMakeOrder.final_complete_order)
+async def booking_complete_end(callback: CallbackQuery, state: FSMContext):
+    await state.update_data(
+        is_continue="False"
+    )
+    await state.set_state(FSMStart.start)
+
+    await callback.message.answer(
+        text="Заказ Оформлен\n"
+             "\nВыберите действие:",
+        reply_markup=user_panel_kb_builder.as_markup(
+            resize_keyboard=True
+        )
+    )
+
+
+# Отмена оформления заказа
+@order_router.callback_query(F.data == 'order_complete_cancel', FSMMakeOrder.final_complete_order)
+async def booking_complete_cancel(callback: CallbackQuery, state: FSMContext):
+    await state.update_data(
+        is_continue="False"
+    )
+    await state.set_state(FSMStart.start)
+
+    await callback.message.answer(
+        text="Заказ отменен\n"
+             "\nВыберите действие:",
         reply_markup=user_panel_kb_builder.as_markup(
             resize_keyboard=True
         )

@@ -46,6 +46,7 @@ class FSMMakeOrder(StatesGroup):
     start_order = State()
     complete_order = State()
     cancel_order = State()
+    final_complete_order = State()
 
     free_period = State()
     not_free_period = State()
