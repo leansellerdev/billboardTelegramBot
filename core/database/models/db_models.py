@@ -44,6 +44,7 @@ class Order(Base):
     manager: Mapped["Staff"] = relationship('Staff', back_populates="orders", foreign_keys=[manager_id])
     booking: Mapped[List["Booking"]] = relationship()
     created_date: Mapped[datetime.datetime] = mapped_column(DateTime(timezone=False))
+    total_price: Mapped[float] = mapped_column()
 
     def __repr__(self):
         return self.id
@@ -62,6 +63,7 @@ class Booking(Base):
 
     dateStart: Mapped[int] = mapped_column(Date)
     dateEnd: Mapped[int] = mapped_column(Date)
+    price: Mapped[float] = mapped_column()
 
 
 class User(Base):

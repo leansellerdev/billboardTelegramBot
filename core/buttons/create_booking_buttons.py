@@ -12,7 +12,7 @@ create_booking_end_buttons_list = [
 
 create_booking_cancel_buttons_list = [
     InlineKeyboardButton(text="Да", callback_data="booking_change_date"),
-    InlineKeyboardButton(text="Нет (выбрать другой билборд)", callback_data="booking_cancel")
+    InlineKeyboardButton(text="Выбрать другой билборд", callback_data="booking_cancel")
 ]
 
 create_booking_end_kb_builder.add(*create_booking_end_buttons_list)

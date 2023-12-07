@@ -18,6 +18,7 @@ class FSMStart(StatesGroup):
 class FSMMakeOrder(StatesGroup):
     client_id = State()
     manager_id = State()
+    total_price = State()
     created_date = State()
     created_date_y = State()
     created_date_m = State()
@@ -29,6 +30,7 @@ class FSMMakeOrder(StatesGroup):
 
     order_id = State()
     billboard_id = State()
+    price = State()
 
     start_date = State()
     start_date_y = State()

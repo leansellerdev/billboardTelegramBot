@@ -20,7 +20,8 @@ async def create_order(order: dict):
             manager_id=order["manager_id"],
             created_date=datetime.datetime(order["created_date_y"], order["created_date_m"], order["created_date_d"],
                                            order["created_date_h"], order["created_date_min"], order["created_date_s"],
-                                           order["created_date_ms"])
+                                           order["created_date_ms"]),
+            total_price=order["total_price"]
         )
         session.add(order)
         session.commit()
@@ -34,6 +35,21 @@ async def get_order(client_id, manager_id, created_date):
             Order.created_date == created_date).scalar()
 
     return order
+
+
+async def get_order_by_id(order_id):
+    with session:
+        order: Order = session.query(Order).filter(
+            Order.id == order_id).scalar()
+
+    return order
+
+
+async def update_order_total_price(order_id, total_price):
+    order = session.scalar(select(Order).filter_by(id=order_id))
+    order.phone_number = total_price
+
+    session.commit()
 
 
 async def delete_order(order_id):
