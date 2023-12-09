@@ -30,7 +30,7 @@ async def create_user(user: dict):
 
 async def get_user(user_id: int):
     with session:
-        user = session.query(User).filter(User.telegram_id == user_id).scalar()
+        user: User = session.query(User).filter(User.telegram_id == user_id).scalar()
 
     return user
 

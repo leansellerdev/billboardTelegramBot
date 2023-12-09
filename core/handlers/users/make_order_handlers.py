@@ -24,13 +24,14 @@ from core.buttons.user_buttons import user_billboards_kb_builder
 from core.filters.billboard_filters import BillboardDistrictExists, BillboardExistsFilter
 from core.utils.billboard_utils import get_billboard_info_by_name
 from core.utils.order_utils import create_excel_to_send_user_order_bookings, delete_excel_file
-from core.utils.temp.price_utils import calculate_booking_price, calculate_total_order_price
+from core.utils.price_utils import calculate_booking_price, calculate_total_order_price
 
 from core.utils.users_utils import excel_path
 
 
 order_router: Router = Router()
 today = datetime.now().strftime("%d-%m-%Y")
+
 
 # 1
 @order_router.message(BillboardDistrictExists(), FSMStart.billboards)

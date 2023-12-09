@@ -4,15 +4,18 @@ from aiogram.fsm.context import FSMContext
 
 from core.buttons.user_buttons import user_panel_about_us_kb_builder, user_billboards_kb_builder
 from core.buttons.action_buttons import user_panel_kb_builder
+from core.database.requests.booking import get_order_bookings
+from core.database.requests.orders import get_orders_by_client_id
 
 from core.database.requests.staff import get_manager_by_id
-from core.database.requests.users import get_user_manager_id
+from core.database.requests.users import get_user_manager_id, get_user
 from core.database.requests.billboards import get_billboards_by_district
 
-from core.states.states import FSMStart, FSMMakeOrder
+from core.states.states import FSMStart, FSMMakeOrder, FSMSelfOrders
 
 from core.filters.billboard_filters import BillboardDistrictExists
 from core.utils.billboard_utils import get_billboard_info_by_name
+from core.utils.order_utils import get_order_info
 
 users_router: Router = Router()
 
@@ -20,11 +23,56 @@ users_router: Router = Router()
 @users_router.message(F.text == "Мои заказы", FSMStart.start)
 async def self_orders(message: Message, state: FSMContext):
 
-    #await state.set_state(FSMStart.self_orders)
+    client = await get_user(message.from_user.id)
+    orders = await get_orders_by_client_id(client.id)
 
+    for order in orders:
+        info = await get_order_info(order.id)
+        await message.answer(
+            text=info
+        )
+    await state.set_state(FSMSelfOrders.update_billboard)
     await message.answer(
-        text="Coming Soon..."
+        text="Введите номер заказа:"
     )
+
+
+@users_router.message(F.text, FSMSelfOrders.update_billboard)
+async def update_billboard(message: Message, state: FSMContext):
+
+    await state.update_data(
+        order_id=message.text
+    )
+
+    state_data = await state.get_data()
+
+    bookings = await get_order_bookings(state_data["order_id"])
+    text_bookings = ""
+    for booking in bookings:
+        text_bookings += f"Номер билборда: {booking.billboard_id} \nНазвание: {booking.billboard.name}\n"
+
+    await message.answer(text=text_bookings)
+    await message.answer(
+        text="Введите номер билборда:"
+    )
+    await state.set_state(FSMSelfOrders.billboard_id)
+
+
+@users_router.message(F.text, FSMSelfOrders.billboard_id)
+async def billboard_id(message: Message, state: FSMContext):
+    await state.update_data(
+        billboard_id=message.text
+    )
+
+
+
+    #await state.set_state(FSMSelfOrders.billboard_id)
+    await message.answer(
+        text="ssss"
+    )
+
+
+
 
 
 @users_router.message(F.text == "Билборды", FSMStart.start)

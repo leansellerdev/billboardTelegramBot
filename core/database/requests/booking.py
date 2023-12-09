@@ -33,6 +33,13 @@ async def get_order_bookings(order_id):
     return bookings
 
 
+async def get_user_bookings(order_id):
+    with session:
+        bookings: list[[Booking]] = session.query(Booking).filter(Booking.order_id == order_id).options(subqueryload(Booking.billboard)).all()
+
+    return bookings
+
+
 async def delete_booking(booking_id):
     with session:
         session.query(Booking).filter(Booking.id == booking_id).delete()

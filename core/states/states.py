@@ -15,6 +15,15 @@ class FSMStart(StatesGroup):
     about = State()
 
 
+class FSMSelfOrders(StatesGroup):
+    orders = State()
+    change_order = State()
+    get_orders = State()
+    update_billboard = State()
+    order_id = State()
+    billboard_id = State()
+
+
 class FSMMakeOrder(StatesGroup):
     client_id = State()
     manager_id = State()
