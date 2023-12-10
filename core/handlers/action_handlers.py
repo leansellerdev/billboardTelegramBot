@@ -20,25 +20,25 @@ router: Router = Router()
 async def start(message: Message, state: FSMContext):
     username = message.from_user.first_name
 
-    if await is_admin(message.from_user.id):
-        await state.set_state(FSMAdminPanel.start)
-
-        await message.answer(
-            text=f'Здравствуйте Администратор, {username}!\nВыберите действие:',
-            reply_markup=admin_panel_kb_builder.as_markup(
-                resize_keyboard=True
-            )
-        )
-    elif await is_manager(message.from_user.id):
-        await state.set_state(FSMManagerPanel.start)
-
-        await message.answer(
-            text=f'Здравствуйте Менеджер, {username}!\nВыберите действие:',
-            reply_markup=manager_panel_kb_builder.as_markup(
-                resize_keyboard=True
-            )
-        )
-    elif not await user_registered(message.from_user.id):
+    # if await is_admin(message.from_user.id):
+    #     await state.set_state(FSMAdminPanel.start)
+    #
+    #     await message.answer(
+    #         text=f'Здравствуйте Администратор, {username}!\nВыберите действие:',
+    #         reply_markup=admin_panel_kb_builder.as_markup(
+    #             resize_keyboard=True
+    #         )
+    #     )
+    # elif await is_manager(message.from_user.id):
+    #     await state.set_state(FSMManagerPanel.start)
+    #
+    #     await message.answer(
+    #         text=f'Здравствуйте Менеджер, {username}!\nВыберите действие:',
+    #         reply_markup=manager_panel_kb_builder.as_markup(
+    #             resize_keyboard=True
+    #         )
+    #     )
+    if not await user_registered(message.from_user.id):
         await state.set_state(FSMStart.start)
 
         await message.answer(

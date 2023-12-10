@@ -22,6 +22,12 @@ class FSMSelfOrders(StatesGroup):
     update_billboard = State()
     order_id = State()
     billboard_id = State()
+    booking_id = State()
+    start_date = State()
+    new_date_end = State()
+    data_changed_end = State()
+    old_price = State()
+    new_price = State()
 
 
 class FSMMakeOrder(StatesGroup):

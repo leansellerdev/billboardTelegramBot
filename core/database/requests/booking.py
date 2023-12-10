@@ -26,6 +26,13 @@ async def create_booking(booking: dict):
         session.commit()
 
 
+async def get_booking_by_id(booking_id):
+    with session:
+        booking: Booking = session.query(Booking).filter(Booking.id == booking_id).scalar()
+
+    return booking
+
+
 async def get_order_bookings(order_id):
     with session:
         bookings: list[[Booking]] = session.query(Booking).filter(Booking.order_id == order_id).options(subqueryload(Booking.billboard)).all()
@@ -52,13 +59,44 @@ async def is_free_booking_period(billboard_id, date_start, date_end):
             ((Booking.dateStart >= date_start) & (Booking.dateStart <= date_end)) |
             ((Booking.dateEnd >= date_start) & (Booking.dateEnd <= date_end))
         ).all()
-        print(date_start)
-        print(date_end)
-        print("33333333333333333333333333333333 LEN:")
-        print(len(bookings))
+
         if len(bookings) | bool(bookings):
             return False
         else:
             return True
+
+
+async def is_free_booking_period_for_update(billboard_id, date_start, date_end, booking_id):
+    with (session):
+        bookings: list[[Booking]] = session.query(Booking).filter(Booking.id != booking_id).filter(Booking.billboard_id == billboard_id).filter(
+            ((Booking.dateStart >= date_start) & (Booking.dateStart <= date_end)) |
+            ((Booking.dateEnd >= date_start) & (Booking.dateEnd <= date_end))
+        ).all()
+
+        if len(bookings) | bool(bookings):
+            return False
+        else:
+            return True
+
+
+async def change_booking_date_end(booking_id: int, new_date_end):
+
+    booking = session.scalar(select(Booking).filter_by(id=booking_id))
+    booking.dateEnd = new_date_end
+
+    session.commit()
+
+
+async def change_booking_price(booking_id: int, new_price):
+
+    booking = session.scalar(select(Booking).filter_by(id=booking_id))
+    booking.price = new_price
+
+    session.commit()
+
+
+
+
+
 
 

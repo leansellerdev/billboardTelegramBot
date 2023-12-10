@@ -76,8 +76,6 @@ async def start_date(message: Message, state: FSMContext):
     user: User = await get_user(message.from_user.id)
     cur_date = datetime.now()
     state_data = await state.get_data()
-    print("|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||")
-    print(state_data["is_continue"])
 
     if "is_continue" not in state_data or not state_data["is_continue"] or state_data["is_continue"] in (
             "", [], None, 0, False, "False"):
@@ -128,11 +126,6 @@ async def start_date(message: Message, state: FSMContext):
             is_continue="True"
         )
         await create_order(await state.get_data())
-
-    print("//////////////////////////////////////////////////")
-    print(user.id)
-    print(user.manager_id)
-    print(booking_data["created_date"])
 
     await state.update_data(
         order_id=order.id
@@ -222,7 +215,7 @@ async def get_start_date(callback: CallbackQuery,
 async def get_end_date(callback: CallbackQuery,
                        callback_data: CallbackData,
                        state: FSMContext):
-    print("get_end_date")
+
     selected, date = await SimpleCalendar(locale=await get_user_locale(callback.from_user)).process_selection(
         callback, callback_data)
 
@@ -231,13 +224,7 @@ async def get_end_date(callback: CallbackQuery,
         state_data = await state.get_data()
         billboard = await get_billboard_by_id(state_data["billboard_id"])
         days = abs(date.fromisoformat(date.strftime("%Y-%m-%d")) - date.fromisoformat(state_data["start_date"]))
-        print("start_date:" + state_data["start_date"])
-        print("end_date:" + date.strftime("%Y-%m-%d"))
-        print(days)
-        print("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{")
-        print(billboard.pricePerDay)
-        print(days.days)
-        print(await calculate_booking_price(billboard.pricePerDay, days.days))
+
         await state.update_data(
             end_date=date.strftime("%Y-%m-%d"),
             end_date_y=date.year,
@@ -321,8 +308,6 @@ async def booking_complete_end(callback: CallbackQuery, state: FSMContext):
         document=excel_file)
     await callback.message.delete()
     await delete_excel_file()
-
-
 
     await state.set_state(FSMStart.start)
     await callback.message.answer(
