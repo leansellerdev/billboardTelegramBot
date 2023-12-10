@@ -48,10 +48,10 @@ async def create_excel_to_send_manager_users(users: list[User, Staff]):
 
         dt = {
             "id": user.telegram_id,
-            "name": user.name,
-            "surname": user.surname,
-            "email": user.email,
-            "phone_number": user.phone_number
+            "имя": user.name,
+            "фамилия": user.surname,
+            "почта": user.email,
+            "номер телефона": user.phone_number
         }
 
         data.append(dt)

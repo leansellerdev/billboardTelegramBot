@@ -52,11 +52,10 @@ async def create_excel_to_send(users: list[User, Staff]):
 
         dt = {
             "id": user.telegram_id,
-            "name": user.name,
-            "surname": user.surname,
-            "email": user.email,
-            "phone_number": user.phone_number,
-            "status_isManager": user.isManager
+            "имя": user.name,
+            "фамилия": user.surname,
+            "почта": user.email,
+            "номер телефона": user.phone_number,
         }
 
         data.append(dt)
@@ -74,9 +73,9 @@ async def create_excel_to_send_manager_orders(orders: list[Order]):
     for i, order in enumerate(orders):
 
         dt = {
-            "client": order.client.telegram_id,
-            "manager": order.manager.telegram_id,
-            "orders": order.booking,
+            "номер заказа:": order.id,
+            "клиент": order.client.telegram_id,
+            "менеджер": order.manager.telegram_id,
         }
 
         data.append(dt)

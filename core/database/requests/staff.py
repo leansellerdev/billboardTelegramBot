@@ -2,7 +2,7 @@ import os
 from sqlalchemy import select, create_engine
 
 from core.database.models.db_models import Staff, User
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, subqueryload
 
 basedir = r"C:\IITU\python\billboardTelegramBot"
 
@@ -56,7 +56,8 @@ async def get_manager_telegram_id_by_id(staff_id: str):
 
 async def get_manager_orders(staff_id: str):
 
-    staff: Staff = session.query(Staff).filter(Staff.telegram_id == staff_id, Staff.isManager == 1).scalar()
+    staff: Staff = (session.query(Staff).filter(Staff.telegram_id == staff_id, Staff.isManager == 1)
+                    .options(subqueryload(Staff.orders)).scalar())
 
     return staff.orders
 

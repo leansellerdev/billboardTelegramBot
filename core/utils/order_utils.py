@@ -34,7 +34,7 @@ async def create_excel_to_send_user_order_bookings(bookings: list[Booking], tota
     for i, booking in enumerate(bookings):
 
         dt = {
-            "order_id": booking.order_id,
+            "номер заказа": booking.order_id,
             "Название билборда": booking.billboard.name,
             "Дата начала": booking.dateStart.strftime("%Y-%m-%d"),
             "Конечная дата": booking.dateEnd.strftime("%Y-%m-%d"),

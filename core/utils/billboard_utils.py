@@ -53,13 +53,13 @@ async def create_excel_to_send_all_billboards(billboards: list[Billboard]):
     for i, billboard in enumerate(billboards):
 
         dt = {
-            "name": billboard.name,
-            "width": billboard.width,
-            "height": billboard.height,
-            "surface": billboard.surface,
-            "sides": billboard.sides,
-            "address": billboard.address,
-            "pricePerDay": billboard.pricePerDay
+            "название": billboard.name,
+            "ширина": billboard.width,
+            "высота": billboard.height,
+            "покрытие": billboard.surface,
+            "стороны": billboard.sides,
+            "адрес": billboard.address,
+            "цена": billboard.pricePerDay
         }
 
         data.append(dt)
