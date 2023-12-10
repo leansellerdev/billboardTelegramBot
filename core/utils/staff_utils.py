@@ -72,13 +72,38 @@ async def create_excel_to_send_manager_orders(orders: list[Order]):
 
     for i, order in enumerate(orders):
 
-        dt = {
-            "номер заказа:": order.id,
-            "клиент": order.client.telegram_id,
-            "менеджер": order.manager.telegram_id,
-        }
+        # dt = {
+        #     "номер заказа:": order.id,
+        #     "клиент": order.client.telegram_id,
+        #     "менеджер": order.manager.telegram_id,
+        # }
 
-        data.append(dt)
+        # data.append(dt)
+
+        # bookings = {
+        #     "номер заказа": "",
+        #     "билборд": "",
+        #     "дата начала": "",
+        #     "дата конца": "",
+        # }
+
+        for booking in order.booking:
+            bookings = {
+                "номер заказа:": order.id,
+                "клиент": order.client.telegram_id,
+                "менеджер": order.manager.telegram_id,
+                "номер бронирования": booking.id,
+                "билборд": booking.billboard.name,
+                "дата начала": booking.dateStart,
+                "дата конца": booking.dateEnd,
+                "цена": booking.price,
+            }
+            data.append(bookings)
+
+        tp = {
+            "цена": order.total_price
+        }
+        data.append(tp)
 
     df = pd.DataFrame(data)
     df.to_excel(excel_path, index=False)
