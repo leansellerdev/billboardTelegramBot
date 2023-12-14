@@ -51,7 +51,7 @@ async def main():
 
     # Создаем модели базы данных, если их нет
     # if not os.path.exists(os.path.join(basedir, 'database.db')):
-    if not os.path.exists(os.path.join('/home/alisner20024/billboardTelegramBot/database.db')):
+    if not os.path.exists('/home/alisner20024/billboardTelegramBot/database.db'):
         Base.metadata.create_all(bind=engine)
 
     # Пропускаем накопившиеся апдейты и запускаем polling
