@@ -3,7 +3,7 @@ from aiogram.fsm.state import State, StatesGroup
 from redis.asyncio.client import Redis
 
 
-redis: Redis = Redis(host='localhost', port=6379)
+redis: Redis = Redis(host='redis', port=6379)
 storage: RedisStorage = RedisStorage(redis=redis)
 
 
