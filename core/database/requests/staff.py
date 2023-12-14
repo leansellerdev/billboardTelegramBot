@@ -7,9 +7,8 @@ from sqlalchemy.orm import Session, subqueryload
 # basedir = r"/home/alisner20024/billboardTelegramBot"
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-#engine = create_engine("sqlite:////home/alisner20024/billboardTelegramBot/database.db", echo=True)
-engine = create_engine(f"sqlite:///{os.path.exists(os.path.join(basedir, 'database.db'))}, echo=True)
-
+# engine = create_engine("sqlite:////home/alisner20024/billboardTelegramBot/database.db", echo=True)
+engine = create_engine(f"sqlite:///{os.path.exists(os.path.join(basedir, 'database.db'))}", echo=True)
 
 session: Session = Session(engine)
 
