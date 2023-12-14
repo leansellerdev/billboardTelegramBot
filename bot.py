@@ -20,6 +20,7 @@ dp: Dispatcher = Dispatcher(storage=storage)
 
 basedir = r"/home/alisner20024/billboardTelegramBot"
 
+
 # Инициализируем логгер
 logger: logging = logging.getLogger(__name__)
 
@@ -50,14 +51,12 @@ async def main():
     dp.include_router(make_order_handlers.order_router)
 
     # Создаем модели базы данных, если их нет
-    # if not os.path.exists(os.path.join(basedir, 'database.db')):
-    if not os.path.exists('/home/alisner20024/billboardTelegramBot/database.db'):
+    if not os.path.exists(os.path.join(basedir, 'database.db')):
         Base.metadata.create_all(bind=engine)
 
     # Пропускаем накопившиеся апдейты и запускаем polling
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
-
 
 # Запускаем бота
 if __name__ == '__main__':
