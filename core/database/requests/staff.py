@@ -7,7 +7,7 @@ from sqlalchemy.orm import Session, subqueryload
 basedir = r"/home/alisner20024/billboardTelegramBot"
 
 # basedir = r"C:\Users\ddudk\Desktop\pycharmprojects\billboardTelegramBot"
-engine = create_engine(f"sqlite:///{r'/home/alisner20024/billboardTelegramBot/database.db'}", echo=True)
+engine = create_engine("sqlite:////home/alisner20024/billboardTelegramBot/database.db", echo=True)
 session: Session = Session(engine)
 
 
