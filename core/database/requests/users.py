@@ -5,9 +5,8 @@ from sqlalchemy.orm import Session
 
 from core.database.models.db_models import User
 
-from .staff import basedir
 from core.database.requests.staff import engine
-#engine = create_engine(f"sqlite:///{os.path.join(basedir, 'database.db')}", echo=True)
+
 session: Session(engine) = Session(engine)
 
 

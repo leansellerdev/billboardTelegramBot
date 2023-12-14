@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 
 from core.database.models.db_models import Billboard
 
-from core.database.requests.staff import basedir
 
 from core.database.requests.staff import engine
 

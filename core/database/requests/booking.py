@@ -6,8 +6,6 @@ from sqlalchemy.orm import Session, lazyload, subqueryload
 
 from core.database.models.db_models import Billboard, Booking
 
-from core.database.requests.staff import basedir
-
 from core.database.requests.staff import engine
 
 session: Session(engine) = Session(engine)
