@@ -6,13 +6,12 @@ from sqlalchemy.orm import Session, subqueryload
 
 basedir = r"/home/alisner20024/billboardTelegramBot"
 
-#basedir = r"C:\Users\ddudk\Desktop\pycharmprojects\billboardTelegramBot"
+# basedir = r"C:\Users\ddudk\Desktop\pycharmprojects\billboardTelegramBot"
 engine = create_engine(f"sqlite:///{os.path.join(basedir, 'database.db')}", echo=True)
 session: Session = Session(engine)
 
 
 async def create_staff(staff: dict):
-
     with session:
         staff: Staff = Staff(
             telegram_id=staff["telegram_id"],
@@ -55,7 +54,6 @@ async def get_manager_telegram_id_by_id(staff_id: str):
 
 
 async def get_manager_orders(staff_id: str):
-
     staff: Staff = (session.query(Staff).filter(Staff.telegram_id == staff_id, Staff.isManager == 1)
                     .options(subqueryload(Staff.orders)).scalar())
 
@@ -74,9 +72,7 @@ async def get_manager_with_min_users():
 
 
 async def delete_staff(staff_id: str):
-
     with session:
-
         staff: Staff = session.scalar(select(Staff).filter_by(telegram_id=staff_id))
         session.delete(staff)
 
@@ -91,23 +87,19 @@ async def get_all_managers():
 
 
 async def change_staff_phone(staff_id: int, new_phone_number):
-
     staff: Staff = session.scalar(select(Staff).filter_by(telegram_id=staff_id))
     staff.phone_number = new_phone_number
     session.commit()
 
 
 async def change_staff_email(staff_id: int, new_email_address: str):
-
     staff: Staff = session.scalar(select(Staff).filter_by(telegram_id=staff_id))
     staff.email = new_email_address
     session.commit()
 
 
 async def set_manager_status(user_id: str, status: bool):
-
     with session:
-
         user: User = session.scalar(select(User).filter_by(telegram_id=user_id))
         user.isManager = status
 
