@@ -18,7 +18,7 @@ from core.database.requests.staff import engine
 bot: Bot = Bot(BOT_TOKEN, parse_mode='html')
 dp: Dispatcher = Dispatcher(storage=storage)
 
-basedir = os.path.abspath(os.path.dirname(__file__))
+basedir = "/home/alisner20024/billboardTelegramBot"  # os.path.abspath(os.path.dirname(__file__))
 
 
 # Инициализируем логгер
