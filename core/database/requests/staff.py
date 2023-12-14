@@ -4,7 +4,7 @@ from sqlalchemy import select, create_engine
 from core.database.models.db_models import Staff, User
 from sqlalchemy.orm import Session, subqueryload
 
-basedir = r"C:\IITU\python\billboardTelegramBot"
+basedir = r"/home/u1/billboardTelegramBot"
 
 #basedir = r"C:\Users\ddudk\Desktop\pycharmprojects\billboardTelegramBot"
 engine = create_engine(f"sqlite:///{os.path.join(basedir, 'database.db')}", echo=True)
