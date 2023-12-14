@@ -100,11 +100,6 @@ async def create_excel_to_send_manager_orders(orders: list[Order]):
             }
             data.append(bookings)
 
-        tp = {
-            "цена": order.total_price
-        }
-        data.append(tp)
-
     df = pd.DataFrame(data)
     df.to_excel(excel_path, index=False)
 

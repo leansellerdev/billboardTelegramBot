@@ -11,7 +11,8 @@ from core.buttons.manager_buttons import (manager_panel_statistics_kb_builder,
                                           manager_clients_actions_kb_builder,
                                           manager_billboards_actions_kb_builder)
 from core.buttons.action_buttons import manager_panel_kb_builder
-from core.utils.billboard_utils import create_excel_to_send_all_billboards
+from core.utils.billboard_utils import create_excel_to_send_all_billboards, \
+    create_excel_to_send_all_billboards_statistics
 from core.utils.staff_utils import create_excel_to_send_manager_orders
 from core.utils.users_utils import create_excel_to_send_manager_users, excel_path, delete_excel_file
 
@@ -125,6 +126,21 @@ async def statistics_by_billboard(message: Message):
 
 @manager_router.message(F.text == "Ст-ка всех билбордов", FSMManagerPanel.statistics)
 async def statistics_full(message: Message):
+
+    billboard_list = await get_all_billboards()
+
+    excel_file = FSInputFile(excel_path, filename=f"billboards-statistics-{today}.xlsx")
+
+    await create_excel_to_send_all_billboards_statistics(billboard_list)
+    await message.answer_document(
+        document=excel_file,
+        reply_markup=manager_billboards_actions_kb_builder.as_markup(
+            resize_keyboard=True
+        ))
+    await message.delete()
+
+    await delete_excel_file()
+
     await message.answer(
         text="Статистика появится когда будет реализован функционал бронирования билборда",
     )
