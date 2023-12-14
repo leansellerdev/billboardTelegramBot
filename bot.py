@@ -51,8 +51,8 @@ async def main():
     dp.include_router(make_order_handlers.order_router)
 
     # Создаем модели базы данных, если их нет
-    # if not os.path.exists(os.path.join(basedir, 'database.db')):
-    #     Base.metadata.create_all(bind=engine)
+    if not os.path.exists(os.path.join(basedir, 'database.db')):
+        Base.metadata.create_all(bind=engine)
 
     # Пропускаем накопившиеся апдейты и запускаем polling
     await bot.delete_webhook(drop_pending_updates=True)
